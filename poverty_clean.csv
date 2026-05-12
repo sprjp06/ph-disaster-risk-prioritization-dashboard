@@ -1,0 +1,109 @@
+﻿level,area,poverty_threshold_2023,poverty_incidence_2023
+country,Philippines,33296,10.9
+region,National Capital Region (NCR),37711,1.1
+subregion,1st District,37711,1.6
+subregion,2nd District,37711,0.9
+subregion,3rd District,37711,1.6
+subregion,4th District,37711,0.9
+region,Cordillera Administrative Region (CAR),31774,4.4
+province,Abra,30759,9.4
+province,Apayao,29884,4.0
+province,Benguet,31243,2.5
+province,Ifugao,29994,4.6
+province,Kalinga,30353,2.6
+province,Mountain Province,36120,10.5
+region,Region I (Ilocos Region),34454,8.4
+province,Ilocos Norte,35139,0.3
+province,Ilocos Sur,35599,5.2
+province,La Union,33304,6.3
+province,Pangasinan,34502,11.4
+region,Region II (Cagayan Valley),32160,7.2
+province,Batanes,39826,3.3
+province,Cagayan,30055,5.7
+province,Isabela,34500,8.4
+province,Nueva Vizcaya,28778,7.3
+province,Quirino,29189,6.7
+region,Region III (Central Luzon),38510,5.7
+province,Aurora,33172,11.0
+province,Bataan,35822,6.6
+province,Bulacan,41511,6.0
+province,Nueva Ecija,36339,6.9
+province,Pampanga,38459,1.0
+province,Tarlac,36682,6.7
+province,Zambales,40046,11.8
+region,Region IV-A (CALABARZON),37096,5.3
+province,Batangas,35380,4.9
+province,Cavite,41757,4.3
+province,Laguna,38492,5.4
+province,Quezon,29058,6.9
+province,Rizal,39055,5.6
+region,MIMAROPA Region,30472,16.3
+province,Marinduque,30493,8.5
+province,Occidental Mindoro,29253,20.6
+province,Oriental Mindoro,31191,14.1
+province,Palawan,29615,15.8
+province,Romblon,33379,23.0
+region,Region V (Bicol Region),33575,20.3
+province,Albay,35164,18.1
+province,Camarines Norte,33747,17.7
+province,Camarines Sur,33911,22.4
+province,Catanduanes,31832,23.5
+province,Masbate,28627,12.9
+province,Sorsogon,34371,28.4
+region,Region VI (Western Visayas),33122,9.8
+province,Aklan,30138,3.1
+province,Antique,32905,13.8
+province,Capiz,33241,9.8
+province,Guimaras,30847,3.8
+province,Iloilo,33440,11.1
+region,Negros Island Region (NIR),34044,22.6
+province,Negros Occidental,35741,22.1
+province,Negros Oriental,30724,25.1
+province,Siquijor,31072,3.5
+region,Region VII (Central Visayas),34553,12.3
+province,Bohol,30981,14.8
+province,Cebu,35605,11.7
+region,Region VIII (Eastern Visayas),32381,20.3
+province,Biliran,28773,8.5
+province,Eastern Samar,32187,24.7
+province,Leyte,33785,20.6
+province,Northern Samar,33472,21.8
+province,Southern Leyte,31449,7.1
+province,Samar,29039,24.9
+region,Region IX (Zamboanga Peninsula),33353,24.2
+province,Zamboanga del Norte,37169,37.7
+province,Zamboanga del Sur,32008,20.0
+province,Zamboanga Sibugay,26557,17.8
+province,Isabela City,29770,10.0
+region,Region X (Northern Mindanao),33513,18.4
+province,Bukidnon,32992,20.2
+province,Camiguin,32275,9.4
+province,Lanao del Norte,32899,25.2
+province,Misamis Occidental,34598,22.6
+province,Misamis Oriental,34368,12.0
+region,Region XI (Davao Region),31521,11.3
+province,Davao del Norte,31286,7.3
+province,Davao del Sur,31331,9.1
+province,Davao Oriental,33617,29.1
+province,Davao de Oro,29573,7.1
+province,Davao Occidental,28905,19.8
+region,Region XII (SOCCSKSARGEN),29379,17.0
+province,Cotabato,31276,18.0
+province,Sarangani,27755,23.1
+province,South Cotabato,28236,10.1
+province,Sultan Kudarat,29215,26.4
+region,Region XIII (Caraga),29565,14.9
+province,Agusan del Norte,29266,14.7
+province,Agusan del Sur,29210,23.4
+province,Surigao del Norte,29865,6.8
+province,Surigao del Sur,28997,10.3
+province,Dinagat Islands,33989,23.1
+region,BARMM,30922,23.5
+province,Basilan,31577,33.7
+province,Lanao del Sur,33513,12.1
+province,Maguindanao,27965,30.4
+subprovince,Maguindanao del Norte,28024,28.4
+subprovince,Maguindanao del Sur,27919,32.1
+province,Sulu,30407,13.0
+province,Tawi-Tawi,31380,32.3
+province,Cotabato City,38572,33.3

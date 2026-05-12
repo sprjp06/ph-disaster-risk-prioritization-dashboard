@@ -1,0 +1,85 @@
+rank,province,index_score
+1,Batanes,0.753
+2,Ilocos Norte,0.693
+3,NCR,0.675
+4,Ilocos Sur,0.670
+5,Bataan,0.668
+6,Mountain Province,0.660
+7,Camiguin,0.651
+8,La Union,0.651
+9,Siquijor,0.646
+10,Dinagat Islands,0.642
+11,Abra,0.638
+12,Catanduanes,0.630
+13,Pampanga,0.630
+14,Sorsogon,0.624
+15,Occidental Mindoro,0.622
+16,Marinduque,0.618
+17,Nueva Vizcaya,0.615
+18,Benguet,0.610
+19,Laguna,0.608
+20,Iloilo,0.602
+21,Ifugao,0.601
+22,Agusan del Norte,0.600
+23,Albay,0.599
+24,Surigao del Norte,0.595
+25,Nueva Ecija,0.592
+26,Oriental Mindoro,0.588
+27,Capiz,0.588
+28,Aklan,0.585
+29,Apayao,0.582
+30,Palawan,0.577
+31,Batangas,0.575
+32,Negros Occidental,0.575
+33,Cebu,0.573
+34,Southern Leyte,0.571
+35,Rizal,0.570
+36,Aurora,0.569
+37,Tarlac,0.568
+38,Biliran,0.567
+39,Guimaras,0.567
+40,Bohol,0.566
+41,Quezon,0.565
+42,South Cotabato,0.565
+43,Zambales,0.563
+44,Pangasinan,0.561
+45,Cotabato City,0.559
+46,Quirino,0.557
+47,Camarines Norte,0.556
+48,Cagayan,0.556
+49,Bulacan,0.552
+50,Romblon,0.551
+51,Davao del Norte,0.548
+52,Camarines Sur,0.547
+53,Isabela,0.547
+54,Cavite,0.546
+55,Eastern Samar,0.543
+56,Leyte,0.541
+57,Davao del Sur,0.541
+58,Misamis Occidental,0.540
+59,Misamis Oriental,0.532
+60,Agusan del Sur,0.531
+61,Surigao del Sur,0.527
+62,Compostela Valley,0.520
+63,Davao Oriental,0.520
+64,Kalinga,0.519
+65,Negros Oriental,0.518
+66,Antique,0.514
+67,Zamboanga del Norte,0.492
+68,Masbate,0.489
+69,Lanao del Norte,0.487
+70,Bukidnon,0.479
+71,Zamboanga del Sur,0.473
+72,City of Isabela,0.461
+73,Zamboanga Sibugay,0.460
+74,Davao Occidental,0.451
+75,Samar,0.451
+76,Cotabato,0.442
+77,Sultan Kudarat,0.436
+78,Northern Samar,0.429
+79,Sarangani,0.413
+80,Lanao del Sur,0.378
+81,Tawi-Tawi,0.343
+82,Basilan,0.331
+83,Maguindanao,0.302
+84,Sulu,0.221
