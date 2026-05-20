@@ -111,62 +111,13 @@
       display: none;
     }
 
-    .dashboard.dashboard--choro #choroLegendToggle {
-      left: 14px;
-      right: auto;
-      top: 14px;
-      display: inline-flex !important;
-    }
-
-    .dashboard:not(.dashboard--choro) #choroLegendToggle {
-      display: none !important;
-    }
-
     .dashboard.dashboard--choro #choroLegendPanel {
       left: 14px;
       right: auto;
-      top: 52px;
+      top: 14px;
       width: min(300px, calc(100% - 28px));
       max-width: calc(100% - 28px);
       max-height: min(210px, calc(100% - 120px));
-    }
-
-    #choroLegendPanel {
-      display: none !important;
-    }
-
-    #choroLegendPanel.choro-legend-open {
-      display: flex !important;
-    }
-
-    #choroLegendToggle {
-      position: absolute;
-      z-index: 12;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      min-height: 32px;
-      padding: 6px 12px;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      background: rgba(15, 24, 38, 0.94);
-      color: #e8f0ff;
-      font-size: 11px;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      cursor: pointer;
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-    }
-
-    #choroLegendToggle:hover {
-      background: rgba(28, 42, 66, 0.98);
-      border-color: rgba(91, 141, 255, 0.45);
-    }
-
-    #choroLegendToggle.is-open {
-      border-color: rgba(91, 141, 255, 0.55);
-      color: #fff;
     }
 
     .dashboard.dashboard--choro .map-wrap {
@@ -2569,7 +2520,7 @@
       max-height: 380px;
     }
 
-    #choroLegendPanel.choro-legend-open {
+    #choroLegendPanel {
       position: absolute;
       top: 14px;
       right: 14px;
@@ -2586,6 +2537,7 @@
       line-height: 1.3;
       color: var(--ink);
       overflow-y: auto;
+      display: flex;
       flex-direction: column;
       gap: 0;
       z-index: 11;
@@ -3304,8 +3256,7 @@
         <div class="map-svg-stack">
           <svg id="mapChart" viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid slice"></svg>
           <div id="priorityMapLegend" class="priority-map-legend panel-hidden" aria-hidden="true"></div>
-          <button type="button" id="choroLegendToggle" aria-expanded="false" aria-controls="choroLegendPanel">Legend</button>
-          <div id="choroLegendPanel" hidden role="region" aria-label="Map color legend" aria-hidden="true"></div>
+          <div id="choroLegendPanel" class="panel-hidden"></div>
           <div class="map-hud map-hud-north" aria-hidden="true">
             <span class="north-letter">N</span>
             <div class="north-arrow" title="North"></div>
@@ -3459,7 +3410,6 @@
       mapZoomTransform: null,
       rankListExpanded: false,
       priorityRankListExpanded: false,
-      choroLegendOpen: false,
       _lastStepForMapZoom: null,
       _mapZoomBehavior: null,
       _priorDashboardStep: null,
@@ -4101,7 +4051,6 @@
       });
       d3.select("#showTracks").property("checked", state.showTracks);
       syncTyphoonTracksUI();
-      syncChoroLegendVisibility();
       updateComparisonDropdowns(rows);
       renderQuadrantLegend();
     }
@@ -4117,11 +4066,6 @@
       // Guided narration (onboarding)
       initGuidedTour();
       d3.select("#startGuidedNarrationBtn").on("click", () => startGuidedNarration());
-      d3.select("#choroLegendToggle").on("click", () => {
-        if (state.step < 1 || state.step > 3) return;
-        state.choroLegendOpen = !state.choroLegendOpen;
-        syncChoroLegendVisibility();
-      });
       function closeTopPopovers() {
         d3.select("#interpretGuidePopover").classed("open", false).attr("aria-hidden", "true");
         d3.select("#aboutPopover").classed("open", false).attr("aria-hidden", "true");
@@ -5231,25 +5175,10 @@
       updateLayoutMode();
     }
 
-    function syncChoroLegendVisibility() {
-      const choro = state.step >= 1 && state.step <= 3;
-      const open = choro && state.choroLegendOpen;
-      const btn = d3.select("#choroLegendToggle");
-      btn.classed("is-open", open);
-      btn.attr("aria-expanded", open ? "true" : "false");
-      btn.attr("aria-label", open ? "Hide map legend" : "Show map legend");
-      btn.text(open ? "Hide legend" : "Legend");
-      const panel = d3.select("#choroLegendPanel");
-      panel.classed("choro-legend-open", open);
-      const panelNode = panel.node();
-      if (panelNode) panelNode.hidden = !open;
-      panel.attr("aria-hidden", open ? "false" : "true");
-    }
-
     function updateRightPanels() {
       d3.select("#scatterChart").classed("panel-hidden", !(state.step === 4 || state.step === 5));
       d3.select("#priorityPanel").classed("panel-hidden", true);
-      syncChoroLegendVisibility();
+      d3.select("#choroLegendPanel").classed("panel-hidden", state.step === 4 || state.step === 5);
       d3.select("#priorityMapLegend").classed("panel-hidden", true);
       d3.select("#priorityPreviewCard").classed("panel-hidden", state.step === 5);
       d3.select(".bivar-card").classed("panel-hidden", state.step <= 3);
@@ -5350,7 +5279,6 @@
       if (state._priorDashboardStep != null && state._priorDashboardStep !== state.step) {
         state.tooltipPinned = null;
         tip.style("opacity", 0);
-        if (state.step >= 1 && state.step <= 3) state.choroLegendOpen = false;
       }
 
       // Cache for cross-panel interactions (rank list -> map focus).
@@ -6143,7 +6071,6 @@
       root.selectAll("*").remove();
       if (!filtered.length) {
         root.append("p").style("font-size", "14px").text("No provinces match the current filters.");
-        syncChoroLegendVisibility();
         return;
       }
       root.append("h4").attr("class", "choro-legend-panel-title").text("Legend");
@@ -6167,7 +6094,6 @@
         stack.append("p").attr("class", "choro-legend-extent").text(`Low ≈ ${lo.toFixed(1)}% · High ≈ ${hi.toFixed(1)}%`);
         legendStrip(stack, d3.interpolatePurples);
       }
-      syncChoroLegendVisibility();
     }
 
     function renderLeftRankPanel(filtered) {
