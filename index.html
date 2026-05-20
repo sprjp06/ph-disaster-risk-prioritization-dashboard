@@ -3766,7 +3766,8 @@
       renderAll(merged, tracks, provinces);
     }).catch(err => {
       console.error(err);
-      alert("Failed to load files. Check that CSV/GeoJSON files are beside this HTML and that you are using a local server.");
+      const detail = err?.message ? `\n\n${err.message}` : "";
+      alert(`Dashboard failed to start.${detail}\n\nCheck the browser console for details. If files failed to load, ensure CSV/GeoJSON files are beside this HTML.`);
     });
 
     async function loadProvinceGeoJSON() {
@@ -5344,6 +5345,7 @@
       }
 
       const { projection, path } = getMapProjection(provincesGeo, width, height);
+      const isProjected = false;
 
       const zoomLayer = svg.append("g").attr("class", "map-zoom-layer");
       zoomLayer.attr("transform", state.mapZoomTransform);
