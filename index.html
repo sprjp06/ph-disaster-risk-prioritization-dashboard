@@ -111,13 +111,54 @@
       display: none;
     }
 
+    .dashboard.dashboard--choro #choroLegendToggle {
+      left: 14px;
+      right: auto;
+      top: 14px;
+    }
+
     .dashboard.dashboard--choro #choroLegendPanel {
       left: 14px;
       right: auto;
-      top: 96px;
+      top: 52px;
       width: min(300px, calc(100% - 28px));
       max-width: calc(100% - 28px);
-      max-height: min(210px, calc(100% - 168px));
+      max-height: min(210px, calc(100% - 120px));
+      display: none !important;
+    }
+
+    .dashboard.dashboard--choro #choroLegendPanel.choro-legend-open {
+      display: flex !important;
+    }
+
+    #choroLegendToggle {
+      position: absolute;
+      z-index: 12;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 32px;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: rgba(15, 24, 38, 0.94);
+      color: #e8f0ff;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    #choroLegendToggle:hover {
+      background: rgba(28, 42, 66, 0.98);
+      border-color: rgba(91, 141, 255, 0.45);
+    }
+
+    #choroLegendToggle.is-open {
+      border-color: rgba(91, 141, 255, 0.55);
+      color: #fff;
     }
 
     .dashboard.dashboard--choro .map-wrap {
@@ -3256,7 +3297,8 @@
         <div class="map-svg-stack">
           <svg id="mapChart" viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid slice"></svg>
           <div id="priorityMapLegend" class="priority-map-legend panel-hidden" aria-hidden="true"></div>
-          <div id="choroLegendPanel" class="panel-hidden"></div>
+          <button type="button" id="choroLegendToggle" class="panel-hidden" aria-expanded="false" aria-controls="choroLegendPanel">Legend</button>
+          <div id="choroLegendPanel" class="panel-hidden" role="region" aria-label="Map color legend"></div>
           <div class="map-hud map-hud-north" aria-hidden="true">
             <span class="north-letter">N</span>
             <div class="north-arrow" title="North"></div>
@@ -3410,6 +3452,7 @@
       mapZoomTransform: null,
       rankListExpanded: false,
       priorityRankListExpanded: false,
+      choroLegendOpen: false,
       _lastStepForMapZoom: null,
       _mapZoomBehavior: null,
       _priorDashboardStep: null,
@@ -4051,6 +4094,7 @@
       });
       d3.select("#showTracks").property("checked", state.showTracks);
       syncTyphoonTracksUI();
+      syncChoroLegendVisibility();
       updateComparisonDropdowns(rows);
       renderQuadrantLegend();
     }
@@ -4066,6 +4110,11 @@
       // Guided narration (onboarding)
       initGuidedTour();
       d3.select("#startGuidedNarrationBtn").on("click", () => startGuidedNarration());
+      d3.select("#choroLegendToggle").on("click", () => {
+        if (state.step < 1 || state.step > 3) return;
+        state.choroLegendOpen = !state.choroLegendOpen;
+        syncChoroLegendVisibility();
+      });
       function closeTopPopovers() {
         d3.select("#interpretGuidePopover").classed("open", false).attr("aria-hidden", "true");
         d3.select("#aboutPopover").classed("open", false).attr("aria-hidden", "true");
@@ -4107,7 +4156,7 @@
         d3.selectAll("#stepTabs .step-tab").classed("active", false);
         d3.select(this).classed("active", true);
         renderQuadrantLegend();
-        renderAll(rows, tracks, provinces);
+        scheduleRenderAll(rows, tracks, provinces);
       });
 
       d3.select("#goPriorityBtn").on("click", () => {
@@ -4116,13 +4165,13 @@
         d3.selectAll("#stepTabs .step-tab").classed("active", false);
         d3.select('#stepTabs .step-tab[data-step="5"]').classed("active", true);
         renderQuadrantLegend();
-        renderAll(rows, tracks, provinces);
+        scheduleRenderAll(rows, tracks, provinces);
       });
 
       d3.selectAll('input[name="compareLevel"]').on("change", function () {
         state.compareLevel = this.value;
         updateComparisonDropdowns(rows);
-        renderAll(rows, tracks, provinces);
+        scheduleRenderAll(rows, tracks, provinces);
       });
 
       d3.select("#resetCompareBtn").on("click", () => {
@@ -4132,7 +4181,7 @@
         d3.select("#provinceCard").style("display", "none");
         d3.select("#compareA").property("value", "");
         d3.select("#compareB").property("value", "");
-        renderAll(rows, tracks, provinces);
+        scheduleRenderAll(rows, tracks, provinces);
       });
 
       d3.select("#toggleRankExpandBtn").on("click", () => {
@@ -4166,7 +4215,7 @@
         d3.select("#compareB").property("value", "");
         state.selectedProvince = null;
         d3.select("#provinceCard").style("display", "none");
-        renderAll(rows, tracks, provinces);
+        scheduleRenderAll(rows, tracks, provinces);
       });
 
       d3.select("#provinceCard").on("click", (event) => {
@@ -4176,36 +4225,36 @@
         state.selectedProvince = null;
         state.hoveredProvince = null;
         d3.select("#provinceCard").style("display", "none").html("");
-        renderAll(rows, tracks, provinces);
+        scheduleRenderAll(rows, tracks, provinces);
       });
 
       d3.select("#showTracks").on("change", event => {
         state.showTracks = event.target.checked;
         syncTyphoonTracksUI();
-        renderAll(rows, tracks, provinces);
+        scheduleRenderAll(rows, tracks, provinces);
       });
 
       d3.selectAll(".storm-check").on("change", function () {
         if (this.checked) state.stormTypes.add(this.value);
         else state.stormTypes.delete(this.value);
-        renderAll(rows, tracks, provinces);
+        scheduleRenderAll(rows, tracks, provinces);
       });
 
       d3.selectAll("#mapMetricTabs .metric-tab").on("click", function () {
         state.tab = this.dataset.tab;
         syncMetricTabsUI();
         renderQuadrantLegend();
-        renderAll(rows, tracks, provinces);
+        scheduleRenderAll(rows, tracks, provinces);
       });
       syncMetricTabsUI();
 
       d3.select("#compareA").on("change", event => {
         state.compareA = event.target.value;
-        renderAll(rows, tracks, provinces);
+        scheduleRenderAll(rows, tracks, provinces);
       });
       d3.select("#compareB").on("change", event => {
         state.compareB = event.target.value;
-        renderAll(rows, tracks, provinces);
+        scheduleRenderAll(rows, tracks, provinces);
       });
 
       initMapZoomControls();
@@ -4653,7 +4702,7 @@
         updateCompareLabels();
       }
       const p = state._provincesForRedraw;
-      if (r && r.length && p) renderAll(r, state._tracksForRedraw, p);
+      if (r && r.length && p) scheduleRenderAll(r, state._tracksForRedraw, p);
     }
 
     function narrationNav(delta) {
@@ -4688,7 +4737,7 @@
         else state.prioritySelectedTier = "highest";
       }
       const r = state._rowsForRedraw || state._latestFiltered || [];
-      renderAll(r, state._tracksForRedraw, state._provincesForRedraw);
+      scheduleRenderAll(r, state._tracksForRedraw, state._provincesForRedraw);
     }
 
     function showNarrationStep(idx) {
@@ -4889,7 +4938,7 @@
         if (rMap && rMap.length && pMap) {
           requestAnimationFrame(() => {
             if (!state._narrationActive) return;
-            renderAll(rMap, state._tracksForRedraw, pMap);
+            scheduleRenderAll(rMap, state._tracksForRedraw, pMap);
           });
         }
       }
@@ -5175,10 +5224,25 @@
       updateLayoutMode();
     }
 
+    function syncChoroLegendVisibility() {
+      const choro = state.step >= 1 && state.step <= 3;
+      const open = choro && state.choroLegendOpen;
+      const btn = d3.select("#choroLegendToggle");
+      btn.classed("panel-hidden", !choro);
+      btn.classed("is-open", open);
+      btn.attr("aria-expanded", open ? "true" : "false");
+      btn.attr("aria-label", open ? "Hide map legend" : "Show map legend");
+      btn.text(open ? "Hide legend" : "Legend");
+      d3.select("#choroLegendPanel")
+        .classed("panel-hidden", !open)
+        .classed("choro-legend-open", open)
+        .attr("aria-hidden", open ? "false" : "true");
+    }
+
     function updateRightPanels() {
       d3.select("#scatterChart").classed("panel-hidden", !(state.step === 4 || state.step === 5));
       d3.select("#priorityPanel").classed("panel-hidden", true);
-      d3.select("#choroLegendPanel").classed("panel-hidden", state.step === 4 || state.step === 5);
+      syncChoroLegendVisibility();
       d3.select("#priorityMapLegend").classed("panel-hidden", true);
       d3.select("#priorityPreviewCard").classed("panel-hidden", state.step === 5);
       d3.select(".bivar-card").classed("panel-hidden", state.step <= 3);
@@ -5234,11 +5298,52 @@
       });
     }
 
+    let _renderAllRaf = null;
+    let _hoverSideEffectsRaf = null;
+
+    function scheduleRenderAll(rows, tracks, provinces) {
+      state._pendingRenderArgs = { rows, tracks, provinces };
+      if (_renderAllRaf != null) return;
+      _renderAllRaf = requestAnimationFrame(() => {
+        _renderAllRaf = null;
+        const args = state._pendingRenderArgs;
+        if (!args) return;
+        renderAll(args.rows, args.tracks, args.provinces);
+      });
+    }
+
+    function scheduleHoverSideEffects(classified, filtered) {
+      state._pendingHoverSideEffects = { classified, filtered };
+      if (_hoverSideEffectsRaf != null) return;
+      _hoverSideEffectsRaf = requestAnimationFrame(() => {
+        _hoverSideEffectsRaf = null;
+        const args = state._pendingHoverSideEffects;
+        if (!args) return;
+        renderInsights(args.classified, args.filtered);
+        updateBivarInterpretation(args.classified);
+      });
+    }
+
+    function getMapProjection(provincesGeo, width, height) {
+      if (state._cachedMapGeo === provincesGeo && state._cachedMapPath) {
+        return { projection: state._cachedMapProjection, path: state._cachedMapPath };
+      }
+      const projection = d3.geoMercator();
+      const fitPad = [[22, 14], [width - 22, height - 36]];
+      projection.fitExtent(fitPad, provincesGeo);
+      const path = d3.geoPath(projection);
+      state._cachedMapGeo = provincesGeo;
+      state._cachedMapProjection = projection;
+      state._cachedMapPath = path;
+      return { projection, path };
+    }
+
     function renderAll(rows, tracks, provinces) {
       if (state._priorDashboardStep === 5 && state.step !== 5) state.hoveredProvince = null;
       if (state._priorDashboardStep != null && state._priorDashboardStep !== state.step) {
         state.tooltipPinned = null;
         tip.style("opacity", 0);
+        if (state.step >= 1 && state.step <= 3) state.choroLegendOpen = false;
       }
 
       // Cache for cross-panel interactions (rank list -> map focus).
@@ -5303,11 +5408,7 @@
         return;
       }
 
-      const isProjected = false;
-      const projection = d3.geoMercator();
-      const fitPad = [[22, 14], [width - 22, height - 36]];
-      projection.fitExtent(fitPad, provincesGeo);
-      const path = d3.geoPath(projection);
+      const { projection, path } = getMapProjection(provincesGeo, width, height);
 
       const zoomLayer = svg.append("g").attr("class", "map-zoom-layer");
       zoomLayer.attr("transform", state.mapZoomTransform);
@@ -5389,9 +5490,6 @@
           .attr("stroke-linejoin", "round")
           .attr("opacity", 0.72)
           .attr("filter", "url(#trackGlow)")
-          .attr("stroke-dashoffset", 24)
-          .transition()
-          .duration(1800)
           .attr("stroke-dashoffset", 0);
       }
 
@@ -5464,15 +5562,13 @@
           state.hoveredProvince = focusRow;
           showTooltip(event, focusRow, classifiedRow);
           syncScatterHighlight();
-          renderInsights(state._latestClassified || classified, state._latestFiltered || filtered);
-          updateBivarInterpretation(state._latestClassified || classified);
+          scheduleHoverSideEffects(state._latestClassified || classified, state._latestFiltered || filtered);
         })
         .on("mouseout", () => {
           state.hoveredProvince = null;
           if (!state.tooltipPinned) tip.style("opacity", 0);
           syncScatterHighlight();
-          renderInsights(state._latestClassified || classified, state._latestFiltered || filtered);
-          updateBivarInterpretation(state._latestClassified || classified);
+          scheduleHoverSideEffects(state._latestClassified || classified, state._latestFiltered || filtered);
         })
         .on("click", function(event, d) {
           event.stopPropagation();
@@ -5497,7 +5593,7 @@
             }
             state.selectedProvince = focusRow;
             showProvinceCard(focusRow, classifiedRow);
-            renderAll(rowsForRedraw, tracksForRedraw, provincesForRedraw);
+            scheduleRenderAll(rowsForRedraw, tracksForRedraw, provincesForRedraw);
           }, 220);
         })
         .on("dblclick", function(event, d) {
@@ -6063,6 +6159,7 @@
         stack.append("p").attr("class", "choro-legend-extent").text(`Low ≈ ${lo.toFixed(1)}% · High ≈ ${hi.toFixed(1)}%`);
         legendStrip(stack, d3.interpolatePurples);
       }
+      syncChoroLegendVisibility();
     }
 
     function renderLeftRankPanel(filtered) {
@@ -6132,7 +6229,7 @@
             state._pendingMapFocusKey = standardizeProvinceKeyMap(d.province);
             showProvinceCard(d, null);
             const r = state._rowsForRedraw || state._latestFiltered || [];
-            renderAll(r, state._tracksForRedraw, state._provincesForRedraw);
+            scheduleRenderAll(r, state._tracksForRedraw, state._provincesForRedraw);
           });
       });
 
@@ -6261,7 +6358,7 @@
             state._pendingMapFocusKey = standardizeProvinceKeyMap(d.province);
             showProvinceCard(d, null);
             const r = state._rowsForRedraw || state._latestFiltered || [];
-            renderAll(r, state._tracksForRedraw, state._provincesForRedraw);
+            scheduleRenderAll(r, state._tracksForRedraw, state._provincesForRedraw);
           });
       });
 
@@ -6486,16 +6583,14 @@
           showScatterTooltip(event, d);
           syncMapHighlightFromScatter();
           syncScatterHighlight();
-          renderInsights(state._latestClassified || rows, state._latestFiltered || rows);
-          updateBivarInterpretation(rows);
+          scheduleHoverSideEffects(state._latestClassified || rows, state._latestFiltered || rows);
         })
         .on("mouseout", () => {
           state.hoveredProvince = null;
           tip.style("opacity", 0);
           syncMapHighlightFromScatter();
           syncScatterHighlight();
-          renderInsights(state._latestClassified || rows, state._latestFiltered || rows);
-          updateBivarInterpretation(rows);
+          scheduleHoverSideEffects(state._latestClassified || rows, state._latestFiltered || rows);
         });
 
       svg.append("line").attr("x1", margin.left).attr("x2", width - margin.right + 10).attr("y1", height - margin.bottom).attr("y2", height - margin.bottom).attr("stroke", "#c7d6f0").attr("stroke-width", 1.4);
