@@ -115,6 +115,11 @@
       left: 14px;
       right: auto;
       top: 14px;
+      display: inline-flex !important;
+    }
+
+    .dashboard:not(.dashboard--choro) #choroLegendToggle {
+      display: none !important;
     }
 
     .dashboard.dashboard--choro #choroLegendPanel {
@@ -124,17 +129,20 @@
       width: min(300px, calc(100% - 28px));
       max-width: calc(100% - 28px);
       max-height: min(210px, calc(100% - 120px));
+    }
+
+    #choroLegendPanel {
       display: none !important;
     }
 
-    .dashboard.dashboard--choro #choroLegendPanel.choro-legend-open {
+    #choroLegendPanel.choro-legend-open {
       display: flex !important;
     }
 
     #choroLegendToggle {
       position: absolute;
       z-index: 12;
-      display: inline-flex;
+      display: none;
       align-items: center;
       justify-content: center;
       min-height: 32px;
@@ -2561,7 +2569,7 @@
       max-height: 380px;
     }
 
-    #choroLegendPanel {
+    #choroLegendPanel.choro-legend-open {
       position: absolute;
       top: 14px;
       right: 14px;
@@ -2578,7 +2586,6 @@
       line-height: 1.3;
       color: var(--ink);
       overflow-y: auto;
-      display: flex;
       flex-direction: column;
       gap: 0;
       z-index: 11;
@@ -3297,8 +3304,8 @@
         <div class="map-svg-stack">
           <svg id="mapChart" viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid slice"></svg>
           <div id="priorityMapLegend" class="priority-map-legend panel-hidden" aria-hidden="true"></div>
-          <button type="button" id="choroLegendToggle" class="panel-hidden" aria-expanded="false" aria-controls="choroLegendPanel">Legend</button>
-          <div id="choroLegendPanel" class="panel-hidden" role="region" aria-label="Map color legend"></div>
+          <button type="button" id="choroLegendToggle" aria-expanded="false" aria-controls="choroLegendPanel">Legend</button>
+          <div id="choroLegendPanel" hidden role="region" aria-label="Map color legend" aria-hidden="true"></div>
           <div class="map-hud map-hud-north" aria-hidden="true">
             <span class="north-letter">N</span>
             <div class="north-arrow" title="North"></div>
@@ -5228,15 +5235,15 @@
       const choro = state.step >= 1 && state.step <= 3;
       const open = choro && state.choroLegendOpen;
       const btn = d3.select("#choroLegendToggle");
-      btn.classed("panel-hidden", !choro);
       btn.classed("is-open", open);
       btn.attr("aria-expanded", open ? "true" : "false");
       btn.attr("aria-label", open ? "Hide map legend" : "Show map legend");
       btn.text(open ? "Hide legend" : "Legend");
-      d3.select("#choroLegendPanel")
-        .classed("panel-hidden", !open)
-        .classed("choro-legend-open", open)
-        .attr("aria-hidden", open ? "false" : "true");
+      const panel = d3.select("#choroLegendPanel");
+      panel.classed("choro-legend-open", open);
+      const panelNode = panel.node();
+      if (panelNode) panelNode.hidden = !open;
+      panel.attr("aria-hidden", open ? "false" : "true");
     }
 
     function updateRightPanels() {
@@ -6136,6 +6143,7 @@
       root.selectAll("*").remove();
       if (!filtered.length) {
         root.append("p").style("font-size", "14px").text("No provinces match the current filters.");
+        syncChoroLegendVisibility();
         return;
       }
       root.append("h4").attr("class", "choro-legend-panel-title").text("Legend");
