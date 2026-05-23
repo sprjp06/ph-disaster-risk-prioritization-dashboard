@@ -324,6 +324,315 @@
       font-size: 13px;
     }
 
+    /* Step 6: coordination — same grid as priority / overlap */
+    .dashboard.dashboard--coordination {
+      grid-template-columns: minmax(260px, 300px) minmax(500px, 1fr) minmax(300px, 480px);
+      grid-template-rows: auto auto minmax(420px, 1fr);
+      gap: 12px;
+    }
+
+    .dashboard.dashboard--coordination > .brand { grid-column: 1; grid-row: 1; }
+    .dashboard.dashboard--coordination > .nav { grid-column: 2; grid-row: 1; min-width: 0; }
+    .dashboard.dashboard--coordination > .topactions {
+      grid-column: 3;
+      grid-row: 1;
+      min-width: 0;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-items: center;
+      align-content: center;
+    }
+    .dashboard.dashboard--coordination > .title-card {
+      grid-column: 1 / -1;
+      grid-row: 2;
+    }
+    .dashboard.dashboard--coordination > .coordination-left-rail {
+      grid-column: 1;
+      grid-row: 3;
+      align-self: stretch;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 14px;
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
+    .dashboard.dashboard--coordination > .coordination-network-card {
+      grid-column: 2;
+      grid-row: 3;
+      align-self: stretch;
+      min-height: 0;
+      padding: 0;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .dashboard.dashboard--coordination > .coordination-side-panel {
+      grid-area: unset;
+      grid-column: 3;
+      grid-row: 3;
+      align-self: stretch;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+    }
+    .dashboard.dashboard--coordination > .map-card,
+    .dashboard.dashboard--coordination > .controls,
+    .dashboard.dashboard--coordination > .side-panel,
+    .dashboard.dashboard--coordination > .left-rail,
+    .dashboard.dashboard--coordination > .overlap-left-rail,
+    .dashboard.dashboard--coordination > .priority-left-rail,
+    .dashboard.dashboard--coordination > .bottom {
+      display: none;
+    }
+
+    .coordination-left-rail .coordination-left-card {
+      padding: 14px 15px;
+      display: flex;
+      flex-direction: column;
+      flex: 0 0 auto;
+      min-height: 0;
+    }
+    .coordination-left-rail .coordination-left-card h3 {
+      margin: 0 0 10px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #d8e5fb;
+    }
+    .coordination-left-sub {
+      margin: 0 0 10px;
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    #coordClusterRankPanel {
+      border: 1px solid #2d4568;
+      border-radius: 10px;
+      background: #0e1724;
+      max-height: min(48vh, 380px);
+      overflow-y: auto;
+      padding: 8px;
+      display: grid;
+      gap: 8px;
+    }
+    .coord-cluster-row {
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid rgba(45, 69, 104, 0.85);
+      background: rgba(14, 23, 36, 0.9);
+      cursor: pointer;
+      transition: background 0.12s ease, border-color 0.12s ease;
+    }
+    .coord-cluster-row:hover,
+    .coord-cluster-row.active {
+      background: rgba(59, 95, 255, 0.14);
+      border-color: rgba(91, 141, 255, 0.55);
+    }
+    .coord-cluster-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: #eef4ff;
+      line-height: 1.3;
+    }
+    .coord-cluster-meta {
+      margin-top: 4px;
+      font-size: 11px;
+      color: #9eb4d8;
+      line-height: 1.4;
+    }
+    .coord-cluster-tier {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .coord-network-wrap {
+      position: relative;
+      flex: 1;
+      min-height: 520px;
+      background: radial-gradient(circle at 50% 45%, #0c1c31 0%, #050b14 70%, #03070d 100%);
+      display: flex;
+      flex-direction: column;
+    }
+    #coordinationNetwork {
+      display: block;
+      width: 100%;
+      flex: 1 1 auto;
+      min-height: 460px;
+      touch-action: none;
+      cursor: grab;
+    }
+    #coordinationNetwork:active { cursor: grabbing; }
+    .coord-network-legend {
+      position: absolute;
+      left: 14px;
+      bottom: 14px;
+      z-index: 12;
+      width: min(280px, calc(100% - 28px));
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(59, 95, 255, 0.45);
+      background: rgba(10, 16, 28, 0.92);
+      backdrop-filter: blur(4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      font-size: 11px;
+      line-height: 1.45;
+      color: #d6e4ff;
+      pointer-events: none;
+    }
+    .coord-network-legend h4 {
+      margin: 0 0 8px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #e8f0ff;
+      border-bottom: 1px solid rgba(167, 188, 219, 0.22);
+      padding-bottom: 4px;
+    }
+    .coord-leg-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 5px;
+    }
+    .coord-leg-swatch {
+      width: 12px;
+      height: 12px;
+      border-radius: 3px;
+      flex-shrink: 0;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+    }
+    .coord-leg-dot-demo {
+      border-radius: 50%;
+      background: #ff4c72;
+      border: 1px solid rgba(255, 255, 255, 0.35);
+    }
+    .coord-leg-line {
+      width: 22px;
+      height: 0;
+      border-top: 2px solid rgba(158, 180, 216, 0.75);
+      flex-shrink: 0;
+    }
+    .coord-network-note {
+      margin: 8px 0 0;
+      font-size: 10px;
+      color: #8ea6c7;
+      line-height: 1.4;
+    }
+    .coord-summary-body {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #dce8fc;
+    }
+    .coord-summary-body dt {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-transform: none;
+      color: #9eb4d8;
+      margin-top: 12px;
+    }
+    .coord-summary-body dt:first-child { margin-top: 0; }
+    .coord-summary-body dd {
+      margin: 4px 0 0;
+      color: #eef4ff;
+    }
+
+    .coord-summary-body .coord-connected-list {
+      margin: 6px 0 0;
+      padding-left: 1.15em;
+      list-style: disc;
+    }
+
+    .coord-summary-body .coord-connected-list li {
+      margin: 4px 0;
+      font-size: 13px;
+      color: #dce8fc;
+    }
+
+    .coord-summary-body .coord-connected-more {
+      list-style: none;
+      margin-left: -1.15em;
+      padding-left: 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .coord-summary-body .coord-summary-note {
+      margin: 14px 0 0;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 12px;
+      line-height: 1.5;
+      color: #9eb4d8;
+    }
+
+    .coord-summary-body .coord-summary-note dt {
+      margin-top: 0;
+    }
+
+    #coordSummarySection h3 {
+      letter-spacing: 0.08em;
+    }
+    .coord-action-pill {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(91, 141, 255, 0.45);
+      background: rgba(59, 95, 255, 0.15);
+      font-size: 12px;
+      font-weight: 700;
+      color: #d8e8ff;
+    }
+
+    .coord-lens-helper {
+      margin: 8px 0 0;
+      font-size: 12px;
+      line-height: 1.5;
+      color: #9eb4d8;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .coord-panel-hint {
+      margin: 0 0 8px;
+      font-size: 11px;
+      line-height: 1.4;
+      color: #7f92b0;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .coord-filter-list .check-row.is-disabled {
+      opacity: 0.45;
+      pointer-events: none;
+    }
+
+    .coord-filter-presets {
+      padding-bottom: 8px;
+      margin-bottom: 4px;
+      border-bottom: 1px solid rgba(35, 50, 72, 0.65);
+    }
+
+    .coord-filter-tiers-label {
+      margin: 10px 0 6px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #8ea6c7;
+      text-transform: none;
+    }
+
     .map-priority-lead {
       margin: 4px 0 0;
       font-size: 13px;
@@ -1143,7 +1452,7 @@
     .step-tabs {
       display: grid;
       /* minmax(0,1fr) so every column shares width equally (content cannot widen one tab) */
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(6, minmax(0, 1fr));
       border: 1px solid var(--border);
       border-radius: 10px;
       overflow: hidden;
@@ -2919,6 +3228,22 @@
         gap: 12px;
       }
       .dashboard.dashboard--priority .priority-left-rail.expanded #priorityLeftRankPanel { max-height: none; }
+      .dashboard.dashboard--coordination {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+      .dashboard.dashboard--coordination > .brand,
+      .dashboard.dashboard--coordination > .nav,
+      .dashboard.dashboard--coordination > .topactions,
+      .dashboard.dashboard--coordination > .title-card,
+      .dashboard.dashboard--coordination > .coordination-left-rail,
+      .dashboard.dashboard--coordination > .coordination-network-card,
+      .dashboard.dashboard--coordination > .coordination-side-panel {
+        grid-column: 1 / -1 !important;
+        grid-row: auto !important;
+        max-height: none !important;
+      }
+      .coord-network-wrap { min-height: 420px; }
       .overlap-bottom-row { grid-template-columns: 1fr; }
       .footer-triple { grid-template-columns: 1fr; }
       .bottom-cards-row { grid-template-columns: 1fr; }
@@ -2940,6 +3265,7 @@
         <button type="button" class="step-tab" data-step="3"><strong>3 Poverty</strong><span>Vulnerability</span></button>
         <button type="button" class="step-tab" data-step="4"><strong>4 Overlap</strong><span>Risk Interaction</span></button>
         <button type="button" class="step-tab" data-step="5"><strong>5 Priority</strong><span>Intervention</span></button>
+        <button type="button" class="step-tab" data-step="6"><strong>6 Coordination</strong><span>Linked Risk Clusters</span></button>
       </div>
       <div class="progress" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
     </nav>
@@ -3159,6 +3485,22 @@
       </article>
     </aside>
 
+    <aside id="coordinationLeftRail" class="coordination-left-rail card panel-hidden" aria-label="Cluster ranking and coordination insights">
+      <article class="coordination-left-card card">
+        <h3>Cluster Ranking — Coordination Need</h3>
+        <p class="coordination-left-sub">Clusters grouped by region. Any priority level can be planned together—urgency differs, but links still matter for regional coordination.</p>
+        <div id="coordClusterRankPanel"></div>
+      </article>
+      <article class="coordination-left-card card">
+        <h3>What to notice</h3>
+        <ul class="priority-notice-list">
+          <li>High-priority provinces often appear in connected clusters, not as isolated cases.</li>
+          <li>Strong links suggest shared exposure, similar vulnerability, or common capacity gaps.</li>
+          <li>Cluster-based planning can support joint preparedness, resource sharing, and regional targeting.</li>
+        </ul>
+      </article>
+    </aside>
+
     <aside class="controls card">
       <h3>Controls</h3>
       <div class="control-group">
@@ -3276,6 +3618,97 @@
         <p class="map-interpret panel-hidden" id="mapInterpret" aria-live="polite"></p>
       </div>
     </main>
+
+    <main id="coordinationNetworkCard" class="coordination-network-card card panel-hidden" aria-label="Priority coordination network">
+      <div class="map-heading">
+        <div class="map-heading-titles">
+          <span id="coordNetworkHeading">Priority Coordination Network</span>
+          <p class="map-priority-lead" id="coordNetworkLead">Nodes represent provinces. Links show shared risk or planning relationships.</p>
+        </div>
+        <div class="map-heading-right">
+          <button type="button" class="icon-btn" id="coordNetworkResetBtn" aria-label="Reset network view">Reset view</button>
+        </div>
+      </div>
+      <div class="coord-network-wrap">
+        <svg id="coordinationNetwork" viewBox="0 0 1000 680" preserveAspectRatio="xMidYMid meet" aria-label="Force-directed priority coordination network"></svg>
+        <div id="coordNetworkLegend" class="coord-network-legend" aria-hidden="false"></div>
+      </div>
+    </main>
+
+    <aside id="coordinationSidePanel" class="coordination-side-panel panel-hidden" aria-label="Coordination controls and summary">
+      <section class="panel card">
+        <div class="control-group">
+          <label class="label" for="coordPlanningLens">Planning lens</label>
+          <select id="coordPlanningLens" aria-describedby="coordPlanningLensHelper">
+            <option value="shared">Coordinate shared interventions</option>
+            <option value="capacity">Strengthen weak-capacity areas</option>
+            <option value="priority">Target similar priority levels</option>
+            <option value="risk_profile">Prepare for similar risk profiles</option>
+            <option value="admin">Align with administrative planning</option>
+          </select>
+          <p class="coord-lens-helper" id="coordPlanningLensHelper" role="status"></p>
+        </div>
+        <div class="control-group">
+          <span class="label">Filter provinces</span>
+          <p class="coord-panel-hint">Select one or more priority levels (e.g. Highest + High). Every level can form coordination clusters.</p>
+          <div class="coord-filter-list" style="display:grid; gap:8px; margin-top:6px;">
+            <div class="coord-filter-presets" style="display:grid; gap:8px;">
+              <label class="check-row" style="margin:0;">
+                <input type="checkbox" id="coordFilterAll" checked />
+                All provinces
+              </label>
+              <label class="check-row" style="margin:0;">
+                <input type="checkbox" id="coordFilterTop20" />
+                Also limit to top 20% by priority score
+              </label>
+            </div>
+            <p class="coord-filter-tiers-label">By priority class (select one or more)</p>
+            <label class="check-row coord-tier-row" style="margin:0;">
+              <input type="checkbox" class="coord-tier-check" value="highest" />
+              Highest priority
+            </label>
+            <label class="check-row coord-tier-row" style="margin:0;">
+              <input type="checkbox" class="coord-tier-check" value="high" />
+              High priority
+            </label>
+            <label class="check-row coord-tier-row" style="margin:0;">
+              <input type="checkbox" class="coord-tier-check" value="moderate" />
+              Moderate priority
+            </label>
+            <label class="check-row coord-tier-row" style="margin:0;">
+              <input type="checkbox" class="coord-tier-check" value="lower" />
+              Lower priority
+            </label>
+            <label class="check-row coord-tier-row" style="margin:0;">
+              <input type="checkbox" class="coord-tier-check" value="lowest" />
+              Lowest priority
+            </label>
+          </div>
+        </div>
+        <div class="control-group" style="border-bottom:0; margin-bottom:0; padding-bottom:0;">
+          <span class="label">Arrange network by</span>
+          <p class="coord-panel-hint">Groups the ranked list on the left (map layout stays force-directed).</p>
+          <div style="display:grid; gap:8px; margin-top:6px;">
+            <label class="check-row" style="margin:0;">
+              <input type="radio" name="coordNodeGroup" value="region" checked />
+              Region
+            </label>
+            <label class="check-row" style="margin:0;">
+              <input type="radio" name="coordNodeGroup" value="island" />
+              Island group
+            </label>
+            <label class="check-row" style="margin:0;">
+              <input type="radio" name="coordNodeGroup" value="priority" />
+              Priority class
+            </label>
+          </div>
+        </div>
+      </section>
+      <section class="panel card" id="coordSummarySection" aria-live="polite">
+        <h3>Planning snapshot</h3>
+        <dl class="coord-summary-body" id="coordSummaryBody" aria-live="polite"></dl>
+      </section>
+    </aside>
 
     <aside class="side-panel">
       <section class="panel card bivar-card">
@@ -3426,7 +3859,16 @@
       _narrationMapHighlightKeys: null,
       _narrationIslandCapacityCallouts: null,
       _narrationPovertyCorridorMap: false,
-      _narrationPriorityFullScatter: false
+      _narrationPriorityFullScatter: false,
+      coordPlanningLens: "shared",
+      coordNodeGroup: "region",
+      coordFilterAll: true,
+      coordFilterTop20: false,
+      coordFilterTiers: new Set(),
+      coordSelectedProvince: null,
+      coordSelectedClusterKey: null,
+      coordNetworkZoomTransform: null,
+      _coordSimulation: null
     };
 
     const STEP_COPY = {
@@ -3489,6 +3931,10 @@
         bivarSubtitle: "Each point represents a province.",
         interpret: "Colours show the five priority classes (from vulnerability × capacity gap). Dashed lines are national medians for reference only—not quadrant groups.",
         footnote: "Vulnerability = average of min-max normalized poverty and hazard within the current filter. Capacity gap = 1 − normalized capacity. Priority score = vulnerability × capacity gap (0–1)."
+      },
+      6: {
+        headline: "Which priority provinces should be planned together?",
+        subtitle: "Use the network to identify linked risk clusters where coordinated intervention may be more effective than province-by-province action."
       }
     };
 
@@ -4209,6 +4655,7 @@
       });
 
       initMapZoomControls();
+      initCoordinationControls(rows, tracks, provinces);
 
       d3.select(window).on("keydown.dashboardTooltip", (event) => {
         if (event.key !== "Escape") return;
@@ -4224,7 +4671,7 @@
         tabPill: "Guided analysis",
         focus: "",
         title: "Guided Analysis: From Exposure to Priority",
-        lead: "This walkthrough helps you read the dashboard step by step. It begins with the national hazard baseline, then adds poverty and coping capacity to reveal where risk becomes more urgent. By the end, the analysis narrows the view toward provinces that may require stronger planning attention and targeted support.",
+        lead: "This walkthrough helps you read the dashboard step by step. It begins with the national hazard baseline, then adds poverty and coping capacity to reveal where risk becomes more urgent. The analysis narrows toward provinces that may require stronger planning attention, then closes on Tab 6—where you tour each planning lens in turn and watch the coordination network redraw for every lens.",
         hideDetailBlocks: true,
         selector: null,
         mapAccent: "reset",
@@ -4377,7 +4824,7 @@
         tabPill: "Priority intervention",
         focus: "National priority map and evidence plot together",
         title: "From Evidence to Intervention",
-        lead: "This final priority map is the culmination of the first four tabs. Hazard exposure shows where shocks are likely to occur, coping capacity shows where provinces may struggle to respond, poverty incidence shows where households have fewer buffers, and the bivariate views show where these conditions overlap. The highest-priority provinces are therefore not selected because of one indicator alone, but because they show a combined pattern of vulnerability: high poverty, stronger hazard pressure, and weaker coping capacity. This makes the final tab an intervention guide, helping planners move from analysis to action by identifying where disaster preparedness, social protection, infrastructure support, and recovery planning should be targeted first. Next, the guided analysis walks through each priority class in turn—one step per class—together with the provinces listed below the evidence plot.",
+        lead: "This priority map builds on the first four analytical tabs. Hazard exposure shows where shocks are likely to occur, coping capacity shows where provinces may struggle to respond, poverty incidence shows where households have fewer buffers, and the bivariate views show where these conditions overlap. The highest-priority provinces are not selected from one indicator alone—they reflect combined vulnerability: poverty pressure, hazard exposure, and capacity gaps. The guided analysis next walks through each priority class in turn, together with the provinces listed below the evidence plot, before moving to coordination planning in Tab 6.",
         hideDetailBlocks: true,
         tourSelectors: [".map-card", ".bivar-card"],
         dashboardStep: 5,
@@ -4451,13 +4898,108 @@
         narrationPriorityTier: "lowest"
       },
       {
+        chapter: 16,
+        tabPill: "Coordination",
+        focus: "Priority coordination network and cluster ranking",
+        title: "Linked risk clusters",
+        lead: "Tab 6 shifts from ranking provinces to seeing which ones may be planned together. The next steps walk through each planning lens in turn—the network on screen redraws as each lens is applied so you can compare link patterns. Node size reflects priority score; colour shows priority class.",
+        whatSeeing: "The force-directed network places linked provinces closer together. The left panel ranks coordination clusters (by default, grouped by region) so you can spot groups that may benefit from shared planning.",
+        keyPattern: "High-priority provinces often form clusters with peers facing a similar mix of vulnerability, capacity gap, and exposure—useful when a regional package may work better than isolated province plans.",
+        whyMatters: "Disaster programmes are often delivered province by province, yet hazards, supply chains, and response systems cross boundaries. This view helps planners ask where coordination could reduce duplication or strengthen impact.",
+        plannerInsight: "Click a province or cluster to explore links. Use Reset view if the network drifts after dragging nodes. Relationships are indicative—validate with local DRRM plans and official data.",
+        tourSelectors: [".coordination-network-card", "#coordinationLeftRail"],
+        dashboardStep: 6,
+        mapAccent: "reset",
+        highlightScatter: false
+      },
+      {
+        chapter: 17,
+        tabPill: "Coordination",
+        focus: "Coordinate shared interventions — network links",
+        title: "Planning lens: Coordinate shared interventions",
+        lead: "This is the default, broadest lens. The network redraws to connect provinces with a similar overall mix of intervention need—priority score, vulnerability, capacity gap, and hazard exposure—not because they are neighbours.",
+        whatSeeing: "Watch how link patterns change from the previous view: clusters may widen or narrow as the lens applies combined need indicators. Node size and colour still show priority score and class.",
+        keyPattern: "Provinces with comparable overall urgency and readiness stress tend to link together, even across regions.",
+        whyMatters: "Use this lens first to ask which provinces might share a joint preparedness or capacity package before narrowing to a specific risk or administrative angle.",
+        plannerInsight: "Click a province to open the Planning snapshot. Why linked, Shared planning issue, and Suggested planning action update for this lens.",
+        tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
+        dashboardStep: 6,
+        narrationCoordPlanningLens: "shared",
+        mapAccent: "reset",
+        highlightScatter: false
+      },
+      {
+        chapter: 18,
+        tabPill: "Coordination",
+        focus: "Strengthen weak-capacity areas — network links",
+        title: "Planning lens: Strengthen weak-capacity areas",
+        lead: "The network now links provinces where vulnerability is high and coping capacity is relatively weak—the readiness-stress pattern from Tab 5, applied to coordination.",
+        whatSeeing: "Lines connect provinces facing similar capacity-gap pressure. High-priority nodes may cluster with peers that share readiness shortfalls rather than identical hazard scores.",
+        keyPattern: "Capacity-driven links often bridge provinces that need coordinated preparedness, local capacity-building, or recovery support.",
+        whyMatters: "When the binding constraint is weak coping capacity, regional packages may work better than repeating the same intervention in isolation.",
+        plannerInsight: "The Planning snapshot classifies capacity-gap severity (very high through lower) and suggests actions such as intensive capacity-building where gaps are largest.",
+        tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
+        dashboardStep: 6,
+        narrationCoordPlanningLens: "capacity",
+        mapAccent: "reset",
+        highlightScatter: false
+      },
+      {
+        chapter: 19,
+        tabPill: "Coordination",
+        focus: "Target similar priority levels — network links",
+        title: "Planning lens: Target similar priority levels",
+        lead: "Links now follow comparable intervention urgency—similar priority scores or priority classes—so you can align timing and scale of support across peers.",
+        whatSeeing: "The network may show tighter groupings among highest- and high-priority provinces, with fewer cross-tier bridges than under the shared-interventions lens.",
+        keyPattern: "Provinces in the same priority band link when their urgency indices are close, supporting synchronized rollout.",
+        whyMatters: "Helps planners coordinate who should move together in the same programming wave without assuming geographic adjacency.",
+        plannerInsight: "Select a province to see how Why linked references its priority class and score; use this when aligning phased interventions.",
+        tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
+        dashboardStep: 6,
+        narrationCoordPlanningLens: "priority",
+        mapAccent: "reset",
+        highlightScatter: false
+      },
+      {
+        chapter: 20,
+        tabPill: "Coordination",
+        focus: "Prepare for similar risk profiles — network links",
+        title: "Planning lens: Prepare for similar risk profiles",
+        lead: "The network connects provinces with aligned poverty and hazard-exposure patterns—a risk-profile view rather than capacity or administrative boundaries.",
+        whatSeeing: "Link density shifts toward provinces with similar vulnerability and hazard bands (severe, exposure-driven, vulnerability-driven, and others). Highest-priority provinces remain visible even when hazard ranks differ nationally.",
+        keyPattern: "Eastern seaboard and other exposure corridors may form distinct subgraphs; Mindanao may link on social-vulnerability patterns.",
+        whyMatters: "Supports preparedness and risk-reduction coordination where the main shared concern is how poverty and hazards combine—not logistics alone.",
+        plannerInsight: "Planning snapshot text describes the risk-profile type (e.g. high hazard + high vulnerability) and suggests profile-matched actions.",
+        tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
+        dashboardStep: 6,
+        narrationCoordPlanningLens: "risk_profile",
+        mapAccent: "reset",
+        highlightScatter: false
+      },
+      {
+        chapter: 21,
+        tabPill: "Coordination",
+        focus: "Align with administrative planning — network links",
+        title: "Planning lens: Align with administrative planning",
+        lead: "Links follow region or island group for implementation context. This lens does not mean provinces share the same risk level—it shows where existing regional or island-wide planning channels may support coordination.",
+        whatSeeing: "Dense links within the same region; island-group bridges may appear where provinces share logistics or response systems across regional offices.",
+        keyPattern: "Regional clusters dominate; cross-region links within an island group highlight island-wide coordination needs.",
+        whyMatters: "Useful for DRRM, budgeting, and inter-LGU packages that must respect administrative boundaries even when risk profiles differ.",
+        plannerInsight: "Snapshot copy explains same-region, same-island, or cross-region patterns and notes that administrative links are for implementation context only.",
+        tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
+        dashboardStep: 6,
+        narrationCoordPlanningLens: "admin",
+        mapAccent: "reset",
+        highlightScatter: false
+      },
+      {
         chapter: null,
         tabPill: "Final Interpretation",
         focus: "",
         title: "Final Interpretation",
         lead: "",
         leadHtml:
-          '<p class="narration-conclusion-graf">This dashboard turns separate risk indicators into a practical planning lens. It shows that disaster priority is not defined by hazard exposure alone, but by the overlap between where shocks are likely to occur, where poverty limits household recovery, and where coping capacity is weaker. The highest-priority provinces represent areas where intervention can matter most: strengthening preparedness, social protection, infrastructure resilience, and local response systems before the next disaster occurs.</p>' +
+          '<p class="narration-conclusion-graf">This dashboard turns separate risk indicators into a practical planning lens. It shows that disaster priority is not defined by hazard exposure alone, but by the overlap between where shocks are likely to occur, where poverty limits household recovery, and where coping capacity is weaker. The highest-priority provinces represent areas where intervention can matter most: strengthening preparedness, social protection, infrastructure resilience, and local response systems before the next disaster occurs. Tab 6 adds a coordination layer—linked clusters and planning lenses help identify where joint or differentiated packages may be more practical than isolated province-by-province action.</p>' +
           '<p class="narration-conclusion-graf">This dashboard should be used as a screening and prioritization tool, not as a final decision by itself. The patterns reveal where attention should begin, but final action should still be validated through local knowledge, barangay-level assessment, field consultation, and updated hazard and socioeconomic data. In short, the dashboard helps planners move from seeing risk to deciding where support should go first.</p>' +
           '<h3 class="narration-conclusion-h">Acknowledgement and Data Sources</h3>' +
           '<p class="narration-conclusion-graf">This dashboard was developed by John Superio as a data-driven visualization prototype for disaster risk planning and prioritization in the Philippines. It uses publicly available datasets from the Pacific Disaster Center’s Philippines National Disaster Preparedness Baseline Assessment (2021) for multi-hazard exposure, coping capacity, resilience, and risk indicators; the Philippine Statistics Authority (PSA, 2023) for provincial poverty incidence; DOST-PAGASA / HDX for 2024 tropical cyclone tracks; and OCHA COD-AB, with PSA, NAMRIA, and LMB as acknowledged sources, for Philippine administrative boundaries. The dashboard is intended for educational and planning-support purposes and should be interpreted with local validation and updated official data.</p>',
@@ -4516,9 +5058,15 @@
         (Boolean(cur.highlightScatter) ||
           (Array.isArray(cur.tourSelectors) && cur.tourSelectors.length > 1) ||
           Boolean(cur.narrationPriorityTier));
+      const coordinationWideStep =
+        !mobile &&
+        cur &&
+        !cur.conclusion &&
+        !cur.intro &&
+        Number(cur.dashboardStep) === 6;
 
       card.classList.toggle("narration-panel--mobile", mobile);
-      card.classList.toggle("narration-panel--dock-left", overlapStep || priorityWideStep);
+      card.classList.toggle("narration-panel--dock-left", overlapStep || priorityWideStep || coordinationWideStep);
       card.classList.toggle("narration-panel--conclusion-layout", centerModalStep);
       card.classList.toggle("narration-panel--center-conclusion", centerModalStep && !mobile);
 
@@ -4537,9 +5085,9 @@
         card.style.width = "";
         card.style.maxHeight = "";
         card.style.transform = "";
-      } else if (overlapStep || priorityWideStep) {
+      } else if (overlapStep || priorityWideStep || coordinationWideStep) {
         const topY = Math.max(76, Math.round(window.innerHeight * 0.06));
-        const reserveScatter = 420;
+        const reserveScatter = coordinationWideStep ? 520 : 420;
         const gutter = 40;
         const maxW = Math.min(460, Math.max(300, window.innerWidth - reserveScatter - gutter));
         card.style.left = "20px";
@@ -4671,10 +5219,31 @@
       document.querySelectorAll(".tour-highlight").forEach(el => el.classList.remove("tour-highlight"));
     }
 
+    function applyCoordPlanningLensForTour(lens, opts = {}) {
+      const valid = ["shared", "capacity", "priority", "risk_profile", "admin"];
+      if (!valid.includes(lens)) return;
+      const changed = state.coordPlanningLens !== lens;
+      state.coordPlanningLens = lens;
+      const sel = document.getElementById("coordPlanningLens");
+      if (sel) sel.value = lens;
+      if (typeof updateCoordPlanningLensHelper === "function") updateCoordPlanningLensHelper();
+      if (changed && opts.resetZoom !== false) state.coordNetworkZoomTransform = null;
+      if (state.step === 6) {
+        const r = state._rowsForRedraw || state._latestFiltered || [];
+        const tracks = state._tracksForRedraw;
+        const provinces = state._provincesForRedraw;
+        if (r.length && provinces) renderAll(r, tracks, provinces);
+      }
+    }
+
     function goToStepForTour(step, opts = {}) {
       if (!Number.isFinite(step)) return;
       const force = opts.force === true;
-      if (state.step === step && !force) return;
+      const lensOnlyUpdate = step === 6
+        && opts.coordPlanningLens
+        && state.step === 6
+        && !opts.priorityTier;
+      if (state.step === step && !force && !lensOnlyUpdate) return;
       const stepChanged = state.step !== step;
       if (stepChanged) {
         state.step = step;
@@ -4687,8 +5256,20 @@
         if (pt && PRIORITY_TIER_ORDER.includes(pt)) state.prioritySelectedTier = pt;
         else state.prioritySelectedTier = "highest";
       }
+      if (step === 6) {
+        state.coordSelectedProvince = null;
+        state.coordSelectedClusterKey = null;
+        if (opts.coordPlanningLens) {
+          state.coordPlanningLens = opts.coordPlanningLens;
+        } else if (!state.coordPlanningLens) {
+          state.coordPlanningLens = "shared";
+        }
+      }
       const r = state._rowsForRedraw || state._latestFiltered || [];
       renderAll(r, state._tracksForRedraw, state._provincesForRedraw);
+      if (step === 6 && opts.coordPlanningLens) {
+        applyCoordPlanningLensForTour(opts.coordPlanningLens, { resetZoom: opts.resetCoordZoom !== false });
+      }
     }
 
     function showNarrationStep(idx) {
@@ -4759,7 +5340,14 @@
       }
 
       if (Number.isFinite(s.dashboardStep)) {
-        goToStepForTour(s.dashboardStep, { force: true, priorityTier: s.narrationPriorityTier });
+        goToStepForTour(s.dashboardStep, {
+          force: true,
+          priorityTier: s.narrationPriorityTier,
+          coordPlanningLens: s.narrationCoordPlanningLens,
+          resetCoordZoom: Boolean(s.narrationCoordPlanningLens)
+        });
+      } else if (s.narrationCoordPlanningLens) {
+        applyCoordPlanningLensForTour(s.narrationCoordPlanningLens);
       }
 
       const overlay = document.getElementById("tourOverlay");
@@ -5082,18 +5670,23 @@
       const choro = state.step >= 1 && state.step <= 3;
       const overlap = state.step === 4;
       const priority = state.step === 5;
+      const coordination = state.step === 6;
       const dash = d3.select(".dashboard");
       dash.classed("dashboard--choro", choro);
       dash.classed("dashboard--overlap", overlap);
       dash.classed("dashboard--priority", priority);
-      dash.classed("dashboard--bivar", !choro && !overlap && !priority);
+      dash.classed("dashboard--coordination", coordination);
+      dash.classed("dashboard--bivar", !choro && !overlap && !priority && !coordination);
       dash.classed("step-accent-purple", choro && state.step === 3);
-      d3.select("#bivarFooterBlock").classed("panel-hidden", choro || priority || overlap);
-      d3.select(".bottom-cards-row").classed("panel-hidden", overlap || priority);
+      d3.select("#bivarFooterBlock").classed("panel-hidden", choro || priority || overlap || coordination);
+      d3.select(".bottom-cards-row").classed("panel-hidden", overlap || priority || coordination);
       d3.select("#overlapLeftRail").classed("panel-hidden", !overlap);
-      d3.select(".controls").classed("panel-hidden", overlap || priority);
-      d3.select("#leftRail").classed("panel-hidden", overlap || priority);
+      d3.select(".controls").classed("panel-hidden", overlap || priority || coordination);
+      d3.select("#leftRail").classed("panel-hidden", overlap || priority || coordination);
       d3.select("#priorityLeftRail").classed("panel-hidden", !priority);
+      d3.select("#coordinationLeftRail").classed("panel-hidden", !coordination);
+      d3.select("#coordinationNetworkCard").classed("panel-hidden", !coordination);
+      d3.select("#coordinationSidePanel").classed("panel-hidden", !coordination);
       d3.selectAll("#stepTabs .step-tab").classed("tab-accent-purple", function () {
         return state.step === 3 && this.classList.contains("active");
       });
@@ -5133,15 +5726,20 @@
     }
 
     function updateStepChrome() {
-      const c = STEP_COPY[state.step];
+      const c = STEP_COPY[state.step] || STEP_COPY[1];
       d3.select("#stepHeadline").text(c.headline);
       d3.select("#stepSubtitle").text(c.subtitle);
-      d3.select("#bivarFootnote").text(c.footnote);
-      d3.select("#progressFill").style("width", `${(state.step / 5) * 100}%`);
+      if (c.footnote) d3.select("#bivarFootnote").text(c.footnote);
+      d3.select("#progressFill").style("width", `${(Math.min(state.step, 6) / 6) * 100}%`);
 
       const showMapHeadingRight = state.step === 4;
       d3.select(".map-heading-right").classed("panel-hidden", !showMapHeadingRight);
       d3.select("#mapOverlapToggleCluster").classed("panel-hidden", state.step !== 4);
+
+      if (state.step === 6) {
+        updateLayoutMode();
+        return;
+      }
 
       if (state.step === 4) {
         const hazardPair = state.tab === "poverty_hazard";
@@ -5178,11 +5776,11 @@
     function updateRightPanels() {
       d3.select("#scatterChart").classed("panel-hidden", !(state.step === 4 || state.step === 5));
       d3.select("#priorityPanel").classed("panel-hidden", true);
-      d3.select("#choroLegendPanel").classed("panel-hidden", state.step === 4 || state.step === 5);
+      d3.select("#choroLegendPanel").classed("panel-hidden", state.step === 4 || state.step === 5 || state.step === 6);
       d3.select("#priorityMapLegend").classed("panel-hidden", true);
       d3.select("#priorityPreviewCard").classed("panel-hidden", state.step === 5);
-      d3.select(".bivar-card").classed("panel-hidden", state.step <= 3);
-      d3.select("#comparisonPanelSection").classed("panel-hidden", state.step === 4 || state.step === 5);
+      d3.select(".bivar-card").classed("panel-hidden", state.step <= 3 || state.step === 6);
+      d3.select("#comparisonPanelSection").classed("panel-hidden", state.step === 4 || state.step === 5 || state.step === 6);
       d3.select("#quadrantLegendBivar").classed("panel-hidden", true);
       d3.select("#scatterMiniLegend").classed("panel-hidden", state.step !== 4);
       d3.select("#priorityTierScatterLegend").classed("panel-hidden", true);
@@ -5236,6 +5834,13 @@
 
     function renderAll(rows, tracks, provinces) {
       if (state._priorDashboardStep === 5 && state.step !== 5) state.hoveredProvince = null;
+      if (state._priorDashboardStep === 6 && state.step !== 6) {
+        state.coordSelectedProvince = null;
+        if (state._coordSimulation) {
+          state._coordSimulation.stop();
+          state._coordSimulation = null;
+        }
+      }
       if (state._priorDashboardStep != null && state._priorDashboardStep !== state.step) {
         state.tooltipPinned = null;
         tip.style("opacity", 0);
@@ -5251,27 +5856,32 @@
       const filtered = addNeedCapacityDerived(filteredRaw, filteredRaw.length ? filteredRaw : rows);
       let classified = (state.step === 4)
         ? classifyBivariate(filtered, state.tab)
-        : (state.step === 5)
+        : (state.step === 5 || state.step === 6)
           ? classifyNeedCapacity(filtered)
           : filtered.map(d => ({ ...d, riskClass: "low_low" }));
-      if (state.step === 5) classified = assignPriorityTiers(classified);
+      if (state.step === 5 || state.step === 6) classified = assignPriorityTiers(classified);
       state._latestFiltered = filtered;
       state._latestClassified = classified;
 
       updateStepChrome();
       updateRightPanels();
-      if (state.step >= 4) renderQuadrantLegend();
+      if (state.step >= 4 && state.step <= 5) renderQuadrantLegend();
 
-      renderMap(allDerived, filtered, classified, tracks, provinces, rows, tracks, provinces);
+      if (state.step !== 6) {
+        renderMap(allDerived, filtered, classified, tracks, provinces, rows, tracks, provinces);
+      }
       if (state.step === 4 || state.step === 5) renderScatter(classified);
       if (state.step === 5) renderPriorityTab5(classified);
+      else if (state.step === 6) renderCoordinationTab6(classified);
       else renderChoroLegendPanel(filtered);
 
       renderComparison(rows);
-      renderKpis(classified, filtered);
-      renderInsights(classified, filtered);
-      renderOverlapSpearman(classified);
-      renderLeftRankPanel(filtered);
+      if (state.step !== 6) {
+        renderKpis(classified, filtered);
+        renderInsights(classified, filtered);
+        renderOverlapSpearman(classified);
+        renderLeftRankPanel(filtered);
+      }
       state._priorDashboardStep = state.step;
     }
 
@@ -6793,7 +7403,7 @@
     }
 
     function renderComparison(allRows) {
-      if (state.step === 4 || state.step === 5) {
+      if (state.step === 4 || state.step === 5 || state.step === 6) {
         d3.select("#comparisonTable").html("");
         return;
       }
@@ -6913,6 +7523,1559 @@
           }
         }
       }
+    }
+
+    const PLANNING_LENS_HELP = {
+      shared: "Links provinces with similar overall intervention needs—priority, vulnerability, capacity, and exposure—not geography alone.",
+      capacity: "Highlights provinces where vulnerability is high and coping capacity is relatively weak.",
+      priority: "Groups provinces with comparable urgency based on their priority scores or classes.",
+      risk_profile: "Connects provinces with similar hazard exposure and poverty-vulnerability patterns.",
+      admin: "Links provinces by region or island group for implementation planning—not because risk levels are the same."
+    };
+
+    const PLANNING_LENS_LABELS = {
+      shared: "Coordinate shared interventions",
+      capacity: "Strengthen weak-capacity areas",
+      priority: "Target similar priority levels",
+      risk_profile: "Prepare for similar risk profiles",
+      admin: "Align with administrative planning"
+    };
+
+    const COORD_PLANNING_NOTE = "Relationships shown are similarity-based for planning discussion, not formal administrative agreements or MOUs.";
+
+    const COORD_SHARED_PLANNING_NOTE = "Links show similarity-based planning relationships. They are intended to guide coordination, not replace local validation or official planning processes.";
+
+    const COORD_ADMIN_PLANNING_NOTE = "Administrative links are shown for implementation context only. Priority decisions should still be guided by vulnerability, capacity gap, and risk profile.";
+
+    function coordFmtScore(v) {
+      return Number.isFinite(v) ? v.toFixed(2) : "—";
+    }
+
+    function coordFmtPoverty(v) {
+      return Number.isFinite(v) ? `${v.toFixed(1)}%` : "—";
+    }
+
+    function coordFmtTier(tier) {
+      return priorityTierLabel(tier).toLowerCase();
+    }
+
+    function coordBand01(v) {
+      if (!Number.isFinite(v)) return "not available";
+      if (v < 0.33) return "lower";
+      if (v < 0.67) return "moderate";
+      return "higher";
+    }
+
+    function coordBandPoverty(v) {
+      if (!Number.isFinite(v)) return "not available";
+      if (v < 20) return "lower";
+      if (v < 35) return "moderate";
+      return "higher";
+    }
+
+    function coordMetricPhrase(label, value, band) {
+      if (!Number.isFinite(value)) return `${label} is not available`;
+      return `${label} is ${band} (${coordFmtScore(value)})`;
+    }
+
+    function coordPeerLinkPhrase(n) {
+      if (n === 0) return "No other provinces in the current filter share this pattern.";
+      if (n === 1) return "One other province in the current filter shares this pattern.";
+      return `${n} other provinces in the current filter share this pattern.`;
+    }
+
+    function coordCapacityGapTier(gap) {
+      if (!Number.isFinite(gap)) return "moderate";
+      if (gap >= 0.67) return "very_high";
+      if (gap >= 0.5) return "high";
+      if (gap >= 0.32) return "moderate";
+      return "low";
+    }
+
+    function coordCapacityGapBasisCopy(provinceName, gap, hasPeers) {
+      const tier = coordCapacityGapTier(gap);
+      const linked = {
+        very_high: `${provinceName} is linked to these provinces because they share a very high capacity-gap pattern. Vulnerability is high while coping capacity is much weaker, suggesting a need for intensive capacity-building, preparedness support, and recovery planning.`,
+        high: `${provinceName} is linked to these provinces because they share a high capacity-gap pattern. Vulnerability is elevated while coping capacity is below the level needed to manage risk effectively.`,
+        moderate: `${provinceName} is linked to these provinces because they show a moderate capacity-gap pattern. Their vulnerability and capacity levels suggest targeted preparedness and local capacity-building support may be useful.`,
+        low: `${provinceName} is linked to these provinces because they show a lower capacity-gap pattern. These areas may still need monitoring or specific support, but broad capacity-building intervention may be less urgent.`
+      };
+      const solo = {
+        very_high: `${provinceName} shows a very high capacity-gap pattern. Vulnerability is high while coping capacity is much weaker, suggesting a need for intensive capacity-building, preparedness support, and recovery planning.`,
+        high: `${provinceName} shows a high capacity-gap pattern. Vulnerability is elevated while coping capacity is below the level needed to manage risk effectively.`,
+        moderate: `${provinceName} shows a moderate capacity-gap pattern. Their vulnerability and capacity levels suggest targeted preparedness and local capacity-building support may be useful.`,
+        low: `${provinceName} shows a lower capacity-gap pattern. These areas may still need monitoring or specific support, but broad capacity-building intervention may be less urgent.`
+      };
+      const text = (hasPeers ? linked : solo)[tier] || (hasPeers ? linked.moderate : solo.moderate);
+      if (!hasPeers) return `${text} No other provinces in the current filter share this pattern.`;
+      return text;
+    }
+
+    function coordCapacityGapClusterBasisCopy(memberCount, gap) {
+      const tier = coordCapacityGapTier(gap);
+      const nLabel = `${memberCount} province${memberCount === 1 ? "" : "s"}`;
+      const shareWord = memberCount === 1 ? "shows" : "share";
+      const details = {
+        very_high: `Vulnerability is high while coping capacity is much weaker, suggesting intensive capacity-building, preparedness support, and recovery planning.`,
+        high: `Vulnerability is elevated while coping capacity is below the level needed to manage risk effectively.`,
+        moderate: `Vulnerability and capacity levels suggest targeted preparedness and local capacity-building support may be useful.`,
+        low: `These areas may still need monitoring or specific support, but broad capacity-building intervention may be less urgent.`
+      };
+      const pattern = {
+        very_high: `a very high capacity-gap pattern`,
+        high: `a high capacity-gap pattern`,
+        moderate: `a moderate capacity-gap pattern`,
+        low: `a lower capacity-gap pattern`
+      };
+      return `This cluster covers ${nLabel} that ${shareWord} ${pattern[tier] || pattern.moderate}. ${details[tier] || details.moderate}`;
+    }
+
+    function coordProvinceVulnerability(d) {
+      if (Number.isFinite(d.vulnerability)) return d.vulnerability;
+      if (Number.isFinite(d.poverty_n) && Number.isFinite(d.hazard_n)) return (d.poverty_n + d.hazard_n) / 2;
+      return NaN;
+    }
+
+    function coordProvinceHazard(d) {
+      if (Number.isFinite(d.hazard)) return d.hazard;
+      if (Number.isFinite(d.hazard_n)) return d.hazard_n;
+      return NaN;
+    }
+
+    function coordMetricQuantileBreaks(rows, getter) {
+      const vals = rows.map(getter).filter(Number.isFinite).sort(d3.ascending);
+      if (!vals.length) return { q25: 0.25, q75: 0.75 };
+      return {
+        q25: d3.quantile(vals, 0.25),
+        q75: d3.quantile(vals, 0.75)
+      };
+    }
+
+    function coordRiskQuantileBreaks(referenceRows) {
+      return {
+        hazard: coordMetricQuantileBreaks(referenceRows, coordProvinceHazard),
+        vulnerability: coordMetricQuantileBreaks(referenceRows, coordProvinceVulnerability)
+      };
+    }
+
+    function coordTertileBand(value, breaks) {
+      if (!Number.isFinite(value)) return "moderate";
+      if (value >= breaks.q75) return "high";
+      if (value <= breaks.q25) return "low";
+      return "moderate";
+    }
+
+    function coordRiskProfileType(hazBand, vulnBand) {
+      if (hazBand === "high" && vulnBand === "high") return "severe";
+      if (hazBand === "high") return "exposure_driven";
+      if (hazBand === "moderate" && vulnBand === "high") return "vulnerability_driven";
+      if (hazBand === "moderate" && vulnBand === "moderate") return "moderate_profile";
+      if (hazBand === "low" && vulnBand === "high") return "social_vulnerability";
+      return "lower_immediate";
+    }
+
+    function coordRiskProfileApplyPriorityFloor(type, row, breakRows) {
+      if (!row || !breakRows.length) return type;
+      const tier = row.priorityTier;
+      const score = row.priority_vuln_gap;
+      const gap = Number.isFinite(row.capacity_gap)
+        ? row.capacity_gap
+        : (Number.isFinite(row.capacity_n) ? 1 - row.capacity_n : NaN);
+      const scoreBreaks = coordMetricQuantileBreaks(breakRows, d => d.priority_vuln_gap);
+      const gapBreaks = coordMetricQuantileBreaks(breakRows, d => {
+        if (Number.isFinite(d.capacity_gap)) return d.capacity_gap;
+        return Number.isFinite(d.capacity_n) ? 1 - d.capacity_n : NaN;
+      });
+      const scoreBand = coordTertileBand(score, scoreBreaks);
+      const gapBand = coordTertileBand(gap, gapBreaks);
+      const topTier = tier === "highest" || tier === "high";
+      const urgencyHigh = tier === "highest" || scoreBand === "high";
+
+      if (topTier || urgencyHigh) {
+        if (type === "lower_immediate") {
+          if (gapBand === "high" || gapBand === "moderate") return "vulnerability_driven";
+          return tier === "highest" ? "severe" : "moderate_profile";
+        }
+        if (type === "moderate_profile" && tier === "highest") {
+          return gapBand === "high" || gapBand === "moderate"
+            ? "vulnerability_driven"
+            : "severe";
+        }
+        if (type === "social_vulnerability" && tier === "highest" && gapBand === "high") {
+          return "vulnerability_driven";
+        }
+      }
+      if (tier === "high" && type === "lower_immediate") return "moderate_profile";
+      return type;
+    }
+
+    const COORD_RISK_PROFILE_COPY = {
+      severe: {
+        whyLinked: (name) => `${name} is linked to these provinces because they share a severe risk profile: high hazard exposure combined with high vulnerability. These areas may require coordinated preparedness, risk reduction, and recovery planning.`,
+        whySolo: (name) => `${name} shows a severe risk profile: high hazard exposure combined with high vulnerability. These areas may require coordinated preparedness, risk reduction, and recovery planning.`,
+        sharedIssue: "High exposure and high vulnerability occurring together.",
+        action: "Integrated risk reduction and preparedness package"
+      },
+      exposure_driven: {
+        whyLinked: (name) => `${name} is linked to these provinces because they share an exposure-driven risk profile. Hazard exposure is high, while vulnerability is moderate, suggesting that preparedness, early warning, and exposure management should be strengthened.`,
+        whySolo: (name) => `${name} shows an exposure-driven risk profile. Hazard exposure is high, while vulnerability is moderate, suggesting that preparedness, early warning, and exposure management should be strengthened.`,
+        sharedIssue: "High hazard exposure with moderate vulnerability pressure.",
+        action: "Preparedness and exposure reduction"
+      },
+      vulnerability_driven: {
+        whyLinked: (name) => `${name} is linked to these provinces because they share a vulnerability-driven risk profile. Hazard exposure is not the highest, but vulnerability is elevated, meaning social and economic conditions may increase disaster impacts.`,
+        whySolo: (name) => `${name} shows a vulnerability-driven risk profile. Hazard exposure is not the highest, but vulnerability is elevated, meaning social and economic conditions may increase disaster impacts.`,
+        sharedIssue: "Elevated vulnerability despite moderate hazard exposure.",
+        action: "Social protection and resilience support"
+      },
+      moderate_profile: {
+        whyLinked: (name) => `${name} is linked to these provinces because they share a moderate risk profile. Both hazard exposure and vulnerability are present but not extreme, suggesting a need for targeted monitoring and preparedness.`,
+        whySolo: (name) => `${name} shows a moderate risk profile. Both hazard exposure and vulnerability are present but not extreme, suggesting a need for targeted monitoring and preparedness.`,
+        sharedIssue: "Moderate exposure and vulnerability requiring continued preparedness.",
+        action: "Targeted preparedness and monitoring"
+      },
+      social_vulnerability: {
+        whyLinked: (name) => `${name} is linked to these provinces because they share a social vulnerability concern. Hazard exposure is relatively lower, but vulnerability remains high, meaning these areas may still need resilience-building and poverty-sensitive support.`,
+        whySolo: (name) => `${name} shows a social vulnerability concern. Hazard exposure is relatively lower, but vulnerability remains high, meaning these areas may still need resilience-building and poverty-sensitive support.`,
+        sharedIssue: "High vulnerability despite lower hazard exposure.",
+        action: "Poverty-sensitive resilience support"
+      },
+      lower_immediate: {
+        whyLinked: (name) => `${name} is linked to these provinces because they share a lower immediate risk profile. Hazard exposure and vulnerability are comparatively lower, so broad intervention may be less urgent, but monitoring remains useful.`,
+        whySolo: (name) => `${name} shows a lower immediate risk profile. Hazard exposure and vulnerability are comparatively lower, so broad intervention may be less urgent, but monitoring remains useful.`,
+        sharedIssue: "Lower immediate risk with continued monitoring needs.",
+        action: "Monitor and maintain readiness"
+      }
+    };
+
+    function coordRiskProfileSnapshot(opts) {
+      const breakRows = opts.breakReferenceRows || opts.referenceRows || [];
+      const breaks = coordRiskQuantileBreaks(breakRows);
+      const hazBand = coordTertileBand(opts.hazard, breaks.hazard);
+      const vulnBand = coordTertileBand(opts.vulnerability, breaks.vulnerability);
+      let type = coordRiskProfileType(hazBand, vulnBand);
+      if (opts.row) type = coordRiskProfileApplyPriorityFloor(type, opts.row, breakRows);
+      const copy = COORD_RISK_PROFILE_COPY[type] || COORD_RISK_PROFILE_COPY.moderate_profile;
+      const hasPeers = Boolean(opts.hasPeers);
+      let why = (hasPeers ? copy.whyLinked : copy.whySolo)(opts.name);
+      if (!hasPeers) why += " No other provinces in the current filter share this pattern.";
+      if (opts.isCluster) {
+        why += " This explanation is based on the cluster's average hazard exposure and vulnerability profile.";
+      }
+      return {
+        why,
+        sharedIssue: copy.sharedIssue,
+        action: copy.action,
+        type,
+        hazBand,
+        vulnBand
+      };
+    }
+
+    function coordAdminAnalyzeLinks(province, peers) {
+      if (!peers.length) return { type: "isolated" };
+      const regionLabel = displayRegionLabel(province.region) || province.region || "—";
+      const islandLabel = province.islandGroup || "—";
+      const sameRegionPeers = peers.filter(p => p.region && p.region === province.region);
+      const islandOnlyPeers = peers.filter(
+        p => p.islandGroup && p.islandGroup === province.islandGroup && p.region !== province.region
+      );
+      const allRegions = new Set([province.region, ...peers.map(p => p.region)].filter(Boolean));
+      const allSameIsland = Boolean(province.islandGroup)
+        && peers.every(p => p.islandGroup === province.islandGroup);
+
+      if (sameRegionPeers.length === peers.length) {
+        const allSimilar = peers.every(p => coordSimilarPriority(province, p));
+        const allDifferent = peers.every(p => p.priorityTier !== province.priorityTier);
+        if (allSimilar) {
+          return { type: "same_region_similar_priority", region: regionLabel, island: islandLabel };
+        }
+        if (allDifferent) {
+          return { type: "same_region_diff_priority", region: regionLabel, island: islandLabel };
+        }
+        return { type: "same_region", region: regionLabel, island: islandLabel };
+      }
+
+      if (islandOnlyPeers.length === peers.length) {
+        return { type: "same_island", region: regionLabel, island: islandLabel };
+      }
+
+      if (allRegions.size > 1 && allSameIsland) {
+        return {
+          type: "cross_region_island",
+          region: regionLabel,
+          island: islandLabel,
+          regionCount: allRegions.size
+        };
+      }
+
+      if (sameRegionPeers.length > 0) {
+        const regionPeers = sameRegionPeers;
+        const allSimilar = regionPeers.every(p => coordSimilarPriority(province, p));
+        if (allSimilar) {
+          return { type: "same_region_similar_priority", region: regionLabel, island: islandLabel };
+        }
+        return { type: "same_region_diff_priority", region: regionLabel, island: islandLabel };
+      }
+
+      if (allSameIsland) {
+        return { type: "cross_region_island", region: regionLabel, island: islandLabel, regionCount: allRegions.size };
+      }
+
+      return { type: "same_island", region: regionLabel, island: islandLabel };
+    }
+
+    const COORD_ADMIN_COPY = {
+      same_region: {
+        why: (name, ctx) => `${name} is linked to these provinces because they are part of the same administrative region: ${ctx.region}. This makes coordination more practical through existing regional planning, budgeting, DRRM, and inter-LGU coordination channels.`,
+        sharedIssue: "Priority provinces are concentrated within the same region, suggesting that a regional intervention package may be more efficient than separate province-by-province planning.",
+        action: "Regional coordination package"
+      },
+      same_island: {
+        why: (name, ctx) => `${name} is linked to these provinces because they belong to the same island group: ${ctx.island}. Although they may be in different regions, they may share broader logistics, transport, supply chain, or disaster response constraints.`,
+        sharedIssue: "Priority provinces are spread across several regions but fall within the same island group, suggesting the need for island-wide coordination or shared logistics planning.",
+        action: "Island-level preparedness coordination"
+      },
+      same_region_similar_priority: {
+        why: (name) => `${name} is linked to these provinces because they are in the same region and have similar priority levels. This suggests that existing regional planning structures could be used to coordinate similar intervention packages.`,
+        sharedIssue: "Several provinces in the same region show comparable intervention urgency.",
+        action: "Regional priority action plan"
+      },
+      same_region_diff_priority: {
+        why: (name) => `${name} is linked to these provinces because they share the same administrative region, but their priority levels differ. This suggests that coordination should happen at the regional level, while support intensity should still be tailored province by province.`,
+        sharedIssue: "The same region contains provinces with different levels of intervention need.",
+        action: "Differentiated regional support"
+      },
+      cross_region_island: {
+        why: (name, ctx) => `${name} is linked across multiple regions within ${ctx.island}. This suggests that planning may need to go beyond one regional office, especially for logistics, evacuation routes, supply chains, and shared preparedness systems.`,
+        sharedIssue: "The selected provinces cross regional boundaries but remain within the same broader island planning context.",
+        action: "Cross-region coordination"
+      },
+      isolated: {
+        why: (name) => `${name} has limited administrative links in the current filtered network. This suggests that it may require more localised planning or a targeted province-level intervention rather than a broad cluster package.`,
+        sharedIssue: "The province appears more isolated under the current administrative planning lens.",
+        action: "Standalone local support"
+      }
+    };
+
+    function coordAdminProvinceSnapshot(province, peers) {
+      const name = province.province;
+      const analysis = coordAdminAnalyzeLinks(province, peers);
+      const copy = COORD_ADMIN_COPY[analysis.type] || COORD_ADMIN_COPY.same_region;
+      const why = copy.why(name, analysis);
+      return {
+        why,
+        sharedIssue: copy.sharedIssue,
+        action: copy.action,
+        type: analysis.type
+      };
+    }
+
+    function coordAdminClusterSnapshot(cluster) {
+      const n = cluster.members.length;
+      const priorityCount = cluster.nPriority != null
+        ? cluster.nPriority
+        : cluster.members.filter(d => d.priorityTier === "highest" || d.priorityTier === "high").length;
+      const avgScore = Number.isFinite(cluster.avgScore)
+        ? cluster.avgScore.toFixed(3)
+        : coordFmtScore(d3.mean(cluster.members, d => d.priority_vuln_gap));
+      return {
+        why: `${cluster.name} is shown as a coordination group because it contains multiple priority provinces within the same administrative planning area. This suggests that regional or island-level coordination may be useful before designing individual province interventions.`,
+        sharedIssue: `The cluster contains ${n} provinces, with ${priorityCount} highest-priority provinces, and an average priority score of ${avgScore}.`,
+        action: "Coordinated cluster planning",
+        type: "cluster"
+      };
+    }
+
+    function coordRowCapacityGap(d) {
+      if (Number.isFinite(d.capacity_gap)) return d.capacity_gap;
+      if (Number.isFinite(d.capacity_n)) return 1 - d.capacity_n;
+      return NaN;
+    }
+
+    function coordSharedInterventionRowFromMembers(members) {
+      if (!members.length) return null;
+      return {
+        priority_vuln_gap: d3.mean(members, d => d.priority_vuln_gap),
+        vulnerability: d3.mean(members, d => coordProvinceVulnerability(d)),
+        capacity_gap: d3.mean(members, d => coordRowCapacityGap(d)),
+        hazard: d3.mean(members, d => coordProvinceHazard(d)),
+        priorityTier: coordDominantTier(members)
+      };
+    }
+
+    function coordSharedInterventionClassifyCluster(members, referenceRows) {
+      if (!members.length) return "moderate";
+      if (members.length === 1) {
+        return coordSharedInterventionClassify(members[0], referenceRows, []);
+      }
+      const tiers = new Set(members.map(d => d.priorityTier));
+      const scores = members.map(d => d.priority_vuln_gap).filter(Number.isFinite);
+      const spread = scores.length ? d3.max(scores) - d3.min(scores) : 0;
+      if (tiers.size > 1 && spread > 0.06) return "mixed";
+      const avgRow = coordSharedInterventionRowFromMembers(members);
+      return coordSharedInterventionClassify(avgRow, referenceRows, [members[0]]);
+    }
+
+    function coordSharedInterventionClassify(row, referenceRows, peers) {
+      if (!peers || peers.length === 0) return "isolated";
+
+      const linked = [row, ...peers];
+      const tiers = new Set(linked.map(d => d.priorityTier));
+      const scores = linked.map(d => d.priority_vuln_gap).filter(Number.isFinite);
+      const spread = scores.length ? d3.max(scores) - d3.min(scores) : 0;
+      if (tiers.size > 1 && spread > 0.06) return "mixed";
+      if (tiers.size >= 3) return "mixed";
+
+      const scoreBreaks = coordMetricQuantileBreaks(referenceRows, d => d.priority_vuln_gap);
+      const vulnBreaks = coordMetricQuantileBreaks(referenceRows, coordProvinceVulnerability);
+      const gapBreaks = coordMetricQuantileBreaks(referenceRows, coordRowCapacityGap);
+
+      const scoreBand = coordTertileBand(row.priority_vuln_gap, scoreBreaks);
+      const vulnBand = coordTertileBand(coordProvinceVulnerability(row), vulnBreaks);
+      const gapBand = coordTertileBand(coordRowCapacityGap(row), gapBreaks);
+      const topTier = row.priorityTier === "highest" || row.priorityTier === "high";
+      const elevatedVuln = vulnBand === "high" || vulnBand === "moderate";
+      const weakerCapacity = gapBand === "high" || gapBand === "moderate";
+
+      if (scoreBand === "high" && elevatedVuln && weakerCapacity && topTier) return "very_high";
+      if (scoreBand === "high" || (topTier && vulnBand !== "low")) return "high";
+      if (scoreBand === "moderate") return "moderate";
+      if (scoreBand === "low") return "lower";
+      return "moderate";
+    }
+
+    const COORD_SHARED_INTERVENTION_COPY = {
+      very_high: {
+        why: (name) => `${name} is linked to these provinces because they share a very high intervention-need profile. They combine high priority scores, elevated vulnerability, and weaker coping capacity, suggesting that coordinated support may be more effective than separate province-level actions.`,
+        sharedIssue: "High intervention need driven by overlapping risk, vulnerability, and capacity pressure.",
+        action: "Joint intensive intervention package"
+      },
+      high: {
+        why: (name) => `${name} is linked to these provinces because they show a similar high intervention-need profile. Their priority scores and risk conditions suggest that they may benefit from coordinated preparedness, capacity-building, and targeted resource support.`,
+        sharedIssue: "Similar high-priority conditions across multiple planning indicators.",
+        action: "Coordinated preparedness and capacity support"
+      },
+      moderate: {
+        why: (name) => `${name} is linked to these provinces because they share a moderate intervention-need profile. Their risk, vulnerability, and capacity indicators suggest that targeted support may be useful, but the level of intervention can be more focused and selective.`,
+        sharedIssue: "Moderate but comparable intervention needs across connected provinces.",
+        action: "Targeted joint support"
+      },
+      mixed: {
+        why: (name) => `${name} is linked to these provinces because they share some intervention-relevant conditions, but their level of need differs. This suggests that coordination may still be useful, but support should be tailored to each province rather than applied uniformly.`,
+        sharedIssue: "Shared risk conditions with different levels of intervention urgency.",
+        action: "Coordinated but differentiated support"
+      },
+      lower: {
+        why: (name) => `${name} is linked to these provinces because they share a lower intervention-need profile. These areas may not require immediate intensive support, but they can still be monitored and included in preparedness or resilience planning.`,
+        sharedIssue: "Lower immediate intervention need with continued monitoring value.",
+        action: "Monitor and maintain readiness"
+      },
+      isolated: {
+        why: (name) => `${name} has limited strong links under the current planning lens. This suggests that its intervention needs may be more specific or localised compared with other provinces in the current network.`,
+        sharedIssue: "Distinct local intervention need.",
+        action: "Standalone local assessment"
+      }
+    };
+
+    function coordSharedInterventionSnapshot(opts) {
+      const referenceRows = opts.referenceRows || [];
+      const peers = opts.peers || [];
+      const row = opts.row;
+      const level = opts.isCluster && opts.clusterMembers
+        ? coordSharedInterventionClassifyCluster(opts.clusterMembers, referenceRows)
+        : coordSharedInterventionClassify(row, referenceRows, peers);
+      const copy = COORD_SHARED_INTERVENTION_COPY[level] || COORD_SHARED_INTERVENTION_COPY.moderate;
+      let why = copy.why(opts.name);
+      if (opts.isCluster) {
+        why += " This explanation is based on the cluster's average intervention-need profile.";
+      }
+      return {
+        why,
+        sharedIssue: copy.sharedIssue,
+        action: copy.action,
+        level
+      };
+    }
+
+    function coordConnectionBasisCopy(ctx) {
+      const lens = ctx.lens || "shared";
+      const peers = coordPeerLinkPhrase(ctx.neighborCount ?? 0);
+
+      if (ctx.mode === "province" && ctx.province) {
+        const p = ctx.province;
+        const nm = p.province;
+        if (lens === "capacity") {
+          const gap = Number.isFinite(p.capacity_gap)
+            ? p.capacity_gap
+            : (Number.isFinite(p.capacity_n) ? 1 - p.capacity_n : NaN);
+          const hasPeers = (ctx.neighborCount ?? 0) > 0;
+          return coordCapacityGapBasisCopy(nm, gap, hasPeers);
+        }
+        if (lens === "risk_profile") {
+          const ref = ctx.referenceRows || [];
+          const hasPeers = (ctx.neighborCount ?? 0) > 0;
+          return coordRiskProfileSnapshot({
+            name: nm,
+            hazard: coordProvinceHazard(p),
+            vulnerability: coordProvinceVulnerability(p),
+            referenceRows: ref,
+            breakReferenceRows: ctx.breakReferenceRows || ref,
+            row: p,
+            hasPeers,
+            isCluster: false
+          }).why;
+        }
+        if (lens === "priority") {
+          return `${nm} is grouped with provinces at a similar level of urgency—the ${coordFmtTier(p.priorityTier)} priority class (urgency index ${coordFmtScore(p.priority_vuln_gap)}). ${peers}`;
+        }
+        if (lens === "admin") {
+          const peerRows = ctx.connectedPeers || [];
+          return coordAdminProvinceSnapshot(p, peerRows).why;
+        }
+        if (lens === "shared") {
+          const peerRows = ctx.connectedPeers || [];
+          const ref = ctx.referenceRows || [];
+          return coordSharedInterventionSnapshot({
+            name: nm,
+            row: p,
+            referenceRows: ref,
+            peers: peerRows,
+            isCluster: false
+          }).why;
+        }
+        const urgency = coordBand01(p.priority_vuln_gap);
+        const vuln = coordBand01(p.vulnerability);
+        const gap = coordBand01(p.capacity_gap);
+        return `${nm} is grouped with provinces facing a similar overall mix of needs—urgency, exposure, and readiness—not just because they are neighbours. Overall urgency is ${urgency} (${coordFmtScore(p.priority_vuln_gap)}); vulnerability is ${vuln} (${coordFmtScore(p.vulnerability)}); readiness gap is ${gap} (${coordFmtScore(p.capacity_gap)}). ${peers}`;
+      }
+
+      if (ctx.mode === "cluster" && ctx.cluster) {
+        const cl = ctx.cluster;
+        const count = cl.members.length;
+        const nLabel = `${count} province${count === 1 ? "" : "s"}`;
+        if (lens === "capacity") {
+          const avgGap = d3.mean(cl.members, d => d.capacity_gap);
+          return coordCapacityGapClusterBasisCopy(count, avgGap);
+        }
+        if (lens === "risk_profile") {
+          const ref = ctx.referenceRows || cl.members;
+          const hasPeers = (ctx.neighborCount ?? 0) > 0;
+          const clusterRow = {
+            priority_vuln_gap: d3.mean(cl.members, d => d.priority_vuln_gap),
+            priorityTier: cl.members.some(d => d.priorityTier === "highest")
+              ? "highest"
+              : cl.dominantTier,
+            capacity_gap: d3.mean(cl.members, d => coordRowCapacityGap(d))
+          };
+          return coordRiskProfileSnapshot({
+            name: cl.name,
+            hazard: d3.mean(cl.members, d => coordProvinceHazard(d)),
+            vulnerability: d3.mean(cl.members, d => coordProvinceVulnerability(d)),
+            referenceRows: ref,
+            breakReferenceRows: ctx.breakReferenceRows || ref,
+            row: clusterRow,
+            hasPeers,
+            isCluster: true
+          }).why;
+        }
+        if (lens === "priority") {
+          return `This cluster covers ${nLabel}. Lines connect areas with similar urgency scores and priority classes.`;
+        }
+        if (lens === "admin") {
+          if (count > 1) return coordAdminClusterSnapshot(cl).why;
+          const member = cl.members[0];
+          const peerRows = ctx.connectedPeers || [];
+          return coordAdminProvinceSnapshot(member, peerRows).why;
+        }
+        if (lens === "shared") {
+          const ref = ctx.referenceRows || cl.members;
+          const avgRow = coordSharedInterventionRowFromMembers(cl.members);
+          return coordSharedInterventionSnapshot({
+            name: cl.name,
+            row: avgRow,
+            referenceRows: ref,
+            peers: ctx.connectedPeers || [],
+            clusterMembers: cl.members,
+            isCluster: true
+          }).why;
+        }
+        return `This cluster covers ${nLabel}. Lines reflect a similar overall need for support across urgency, readiness, and exposure.`;
+      }
+
+      const total = ctx.networkCount ?? 0;
+      const viewLabel = `${total} province${total === 1 ? "" : "s"} in view`;
+      if (lens === "capacity") {
+        const gaps = (ctx.networkGaps || []).filter(Number.isFinite);
+        const refGap = gaps.length ? d3.mean(gaps) : 0.5;
+        const tier = coordCapacityGapTier(refGap);
+        const pattern = {
+          very_high: "very high capacity-gap",
+          high: "high capacity-gap",
+          moderate: "moderate capacity-gap",
+          low: "lower capacity-gap"
+        }[tier];
+        return `${viewLabel}. Lines connect provinces with a similar ${pattern} pattern (readiness stress relative to vulnerability).`;
+      }
+      if (lens === "risk_profile") {
+        const ref = ctx.referenceRows || [];
+        const avgHaz = d3.mean(ref, d => coordProvinceHazard(d));
+        const avgVuln = d3.mean(ref, d => coordProvinceVulnerability(d));
+        const snap = coordRiskProfileSnapshot({
+          name: "The network",
+          hazard: avgHaz,
+          vulnerability: avgVuln,
+          referenceRows: ref,
+          breakReferenceRows: ctx.breakReferenceRows || ref,
+          row: {
+            priority_vuln_gap: d3.mean(ref, d => d.priority_vuln_gap),
+            priorityTier: coordDominantTier(ref)
+          },
+          hasPeers: true,
+          isCluster: false
+        });
+        const typeLabel = {
+          severe: "severe (high hazard, high vulnerability)",
+          exposure_driven: "exposure-driven (high hazard)",
+          vulnerability_driven: "vulnerability-driven (elevated vulnerability)",
+          moderate_profile: "moderate",
+          social_vulnerability: "social vulnerability (high vulnerability, lower hazard)",
+          lower_immediate: "lower immediate risk"
+        }[snap.type] || "mixed";
+        return `${viewLabel}. Lines connect provinces with a similar ${typeLabel} profile based on hazard exposure and vulnerability in the current filter.`;
+      }
+      if (lens === "priority") {
+        return `${viewLabel}. Lines connect provinces with similar urgency and priority class.`;
+      }
+      if (lens === "admin") {
+        return `${viewLabel}. Lines reflect implementation context—shared region or island group—not similar risk levels.`;
+      }
+      if (lens === "shared") {
+        const ref = ctx.referenceRows || [];
+        const avgRow = coordSharedInterventionRowFromMembers(ref);
+        if (!avgRow) {
+          return `${viewLabel}. Lines connect provinces with shared intervention needs—not geography alone.`;
+        }
+        const level = coordSharedInterventionClassify(avgRow, ref, ref.slice(1));
+        const label = {
+          very_high: "very high intervention need",
+          high: "high intervention need",
+          moderate: "moderate intervention need",
+          mixed: "mixed intervention need",
+          lower: "lower intervention need",
+          isolated: "distinct local intervention need"
+        }[level] || "shared intervention need";
+        return `${viewLabel}. Lines connect provinces with a ${label} profile based on priority, vulnerability, capacity, and exposure—not geography alone.`;
+      }
+      return `${viewLabel}. Lines connect provinces with a similar overall mix of urgency, readiness, and exposure.`;
+    }
+
+    function coordInCommonCopy(rows, lens, focusProvince) {
+      if (!rows.length) return "No data for the current filter.";
+      const tier = coordDominantTier(rows);
+      const tierLabel = coordFmtTier(tier);
+      const avgGap = d3.mean(rows, d => d.capacity_gap);
+      const avgVuln = d3.mean(rows, d => d.vulnerability);
+      const avgPov = d3.mean(rows, d => d.poverty);
+      const avgHaz = d3.mean(rows, d => d.hazard);
+      const regions = new Set(rows.map(d => d.region).filter(Boolean));
+      const multiRegion = regions.size > 1;
+
+      if (focusProvince && rows.length <= 1) {
+        if (lens === "capacity") {
+          const gap = Number.isFinite(focusProvince.capacity_gap)
+            ? focusProvince.capacity_gap
+            : (Number.isFinite(focusProvince.capacity_n) ? 1 - focusProvince.capacity_n : NaN);
+          const tier = coordCapacityGapTier(gap);
+          const focusByTier = {
+            very_high: "Prioritize intensive capacity-building, preparedness, and recovery planning with linked provinces.",
+            high: "Prioritize closing coping-capacity shortfalls before shocks compound needs.",
+            moderate: "Plan targeted preparedness and local capacity-building with peer provinces.",
+            low: "Monitor linked provinces and target support where gaps emerge; broad capacity programmes may be less urgent."
+          };
+          return focusByTier[tier] || focusByTier.moderate;
+        }
+        if (lens === "risk_profile") {
+          const breakRows = state._latestClassified || state._coordGraphNodes || rows;
+          const snap = coordRiskProfileSnapshot({
+            name: focusProvince.province,
+            hazard: coordProvinceHazard(focusProvince),
+            vulnerability: coordProvinceVulnerability(focusProvince),
+            referenceRows: state._coordGraphNodes || rows,
+            breakReferenceRows: breakRows,
+            row: focusProvince,
+            hasPeers: false,
+            isCluster: false
+          });
+          return snap.sharedIssue;
+        }
+        if (lens === "priority") {
+          return `Focus: act within the ${coordFmtTier(focusProvince.priorityTier)} tier while coordinating with peers.`;
+        }
+        if (lens === "admin") {
+          return coordAdminProvinceSnapshot(focusProvince, []).sharedIssue;
+        }
+        if (lens === "shared") {
+          const ref = state._coordGraphNodes || rows;
+          return coordSharedInterventionSnapshot({
+            name: focusProvince.province,
+            row: focusProvince,
+            referenceRows: ref,
+            peers: [],
+            isCluster: false
+          }).sharedIssue;
+        }
+        return `Focus: treat urgency, readiness, and exposure together in planning.`;
+      }
+
+      if (lens === "capacity") {
+        const gapWord = coordGapLevel(avgGap);
+        return multiRegion
+          ? `${rows.length} areas share ${gapWord} readiness gaps (mean gap ${coordFmtScore(avgGap)}, mean vulnerability ${coordFmtScore(avgVuln)}); dominant tier: ${tierLabel}.`
+          : `Mean gap ${coordFmtScore(avgGap)} with mean vulnerability ${coordFmtScore(avgVuln)}; most areas sit in the ${tierLabel} tier.`;
+      }
+      if (lens === "risk_profile") {
+        const breakRows = state._latestClassified || state._coordGraphNodes || rows;
+        const snap = coordRiskProfileSnapshot({
+          name: "This selection",
+          hazard: avgHaz,
+          vulnerability: avgVuln,
+          referenceRows: state._coordGraphNodes || rows,
+          breakReferenceRows: breakRows,
+          row: focusProvince || {
+            priority_vuln_gap: d3.mean(rows, d => d.priority_vuln_gap),
+            priorityTier: tier
+          },
+          hasPeers: rows.length > 1,
+          isCluster: rows.length > 1 && !focusProvince
+        });
+        return snap.sharedIssue;
+      }
+      if (lens === "priority") {
+        return `Urgency is concentrated in the ${tierLabel} tier (mean score ${coordFmtScore(d3.mean(rows, d => d.priority_vuln_gap))}); timing of support should be aligned.`;
+      }
+      if (lens === "admin") {
+        if (rows.length > 1) {
+          const regions = new Set(rows.map(d => d.region).filter(Boolean));
+          const islands = new Set(rows.map(d => d.islandGroup).filter(Boolean));
+          if (regions.size > 1 && islands.size === 1) {
+            return COORD_ADMIN_COPY.cross_region_island.sharedIssue;
+          }
+          if (regions.size === 1) {
+            const allSameTier = rows.every(d => d.priorityTier === rows[0].priorityTier);
+            return allSameTier
+              ? COORD_ADMIN_COPY.same_region_similar_priority.sharedIssue
+              : COORD_ADMIN_COPY.same_region_diff_priority.sharedIssue;
+          }
+          return COORD_ADMIN_COPY.same_island.sharedIssue;
+        }
+        return COORD_ADMIN_COPY.same_region.sharedIssue;
+      }
+      if (lens === "shared") {
+        const ref = state._coordGraphNodes || rows;
+        const avgRow = coordSharedInterventionRowFromMembers(rows);
+        if (!avgRow) return COORD_SHARED_INTERVENTION_COPY.moderate.sharedIssue;
+        const peers = focusProvince ? rows.filter(d => d.province !== focusProvince.province) : rows.slice(1);
+        return coordSharedInterventionSnapshot({
+          name: focusProvince ? focusProvince.province : "This selection",
+          row: focusProvince || avgRow,
+          referenceRows: ref,
+          peers: peers.length ? peers : rows.slice(1),
+          isCluster: !focusProvince && rows.length > 1
+        }).sharedIssue;
+      }
+      return `Mean score ${coordFmtScore(d3.mean(rows, d => d.priority_vuln_gap))}; readiness and exposure patterns vary—dominant tier: ${tierLabel}.`;
+    }
+
+    function coordNoPeersMessage(lens) {
+      if (lens === "capacity") return "No linked provinces share this readiness pattern in the current filter.";
+      if (lens === "risk_profile") return "No linked provinces share this hazard–vulnerability profile in the current filter.";
+      if (lens === "priority") return "No linked provinces share this urgency level in the current filter.";
+      if (lens === "admin") return "No provinces are linked by region or island group under the current filter.";
+      if (lens === "shared") return "No linked provinces share this intervention-need profile in the current filter.";
+      return "No linked provinces share this overall need pattern in the current filter.";
+    }
+
+    function updateCoordPlanningLensHelper() {
+      const el = document.getElementById("coordPlanningLensHelper");
+      if (el) el.textContent = PLANNING_LENS_HELP[state.coordPlanningLens] || PLANNING_LENS_HELP.shared;
+    }
+
+    function coordPlanningLensLabel() {
+      return PLANNING_LENS_LABELS[state.coordPlanningLens] || PLANNING_LENS_LABELS.shared;
+    }
+
+    function coordGraphNeighborProvinces(focusRow, nodes, links) {
+      if (!focusRow || !links?.length) return [];
+      const key = coordProvinceKey(focusRow);
+      const neighborIds = new Set();
+      links.forEach(l => {
+        const sid = typeof l.source === "object" ? l.source.id : l.source;
+        const tid = typeof l.target === "object" ? l.target.id : l.target;
+        if (sid === key) neighborIds.add(tid);
+        if (tid === key) neighborIds.add(sid);
+      });
+      return [...neighborIds]
+        .map(id => nodes.find(n => n.id === id))
+        .filter(Boolean)
+        .sort((a, b) => d3.descending(a.priority_vuln_gap, b.priority_vuln_gap));
+    }
+
+    function coordDominantTier(rows) {
+      if (!rows.length) return "moderate";
+      const tierCounts = d3.rollup(rows, v => v.length, d => d.priorityTier);
+      let dominant = "lowest";
+      let maxCount = 0;
+      PRIORITY_TIER_ORDER.forEach(tier => {
+        const c = tierCounts.get(tier) || 0;
+        if (c > maxCount) {
+          maxCount = c;
+          dominant = tier;
+        }
+      });
+      return dominant;
+    }
+
+    function coordGapLevel(avgGap) {
+      const tier = coordCapacityGapTier(avgGap);
+      if (tier === "very_high" || tier === "high") return "large";
+      if (tier === "moderate") return "moderate";
+      return "smaller";
+    }
+
+    function appendCoordSummaryField(dl, label, value, opts = {}) {
+      dl.append("dt").text(label);
+      const dd = dl.append("dd");
+      if (opts.pill) {
+        dd.attr("class", "coord-action-pill").text(value);
+        return;
+      }
+      if (opts.html) {
+        dd.html(value);
+        return;
+      }
+      if (opts.connectedList) {
+        const ul = dd.append("ul").attr("class", "coord-connected-list");
+        opts.connectedList.forEach(name => ul.append("li").text(name));
+        if (opts.connectedMore > 0) {
+          ul.append("li")
+            .attr("class", "coord-connected-more")
+            .text(`+ ${opts.connectedMore} more peer${opts.connectedMore === 1 ? "" : "s"}`);
+        }
+        return;
+      }
+      dd.text(value);
+    }
+
+    function coordProvinceKey(d) {
+      return d.province_key_data || standardizeProvinceKeyData(d.province);
+    }
+
+    function getCoordinationNodeRows(classified) {
+      const valid = classified.filter(d => Number.isFinite(d.priority_vuln_gap));
+      let rows = valid;
+
+      if (!state.coordFilterAll) {
+        const tiers = state.coordFilterTiers;
+        if (!tiers || tiers.size === 0) return [];
+        rows = rows.filter(d => tiers.has(d.priorityTier));
+      }
+
+      if (state.coordFilterTop20) {
+        const sorted = [...rows].sort((a, b) => b.priority_vuln_gap - a.priority_vuln_gap);
+        const n = Math.max(1, Math.ceil(0.2 * sorted.length));
+        rows = sorted.slice(0, n);
+      }
+
+      return rows;
+    }
+
+    function syncCoordFilterControlsUI() {
+      const allOn = Boolean(state.coordFilterAll);
+      d3.select("#coordFilterAll").property("checked", allOn);
+      d3.select("#coordFilterTop20").property("checked", Boolean(state.coordFilterTop20));
+      d3.selectAll(".coord-tier-check").each(function () {
+        const tier = this.value;
+        const on = state.coordFilterTiers && state.coordFilterTiers.has(tier);
+        d3.select(this).property("checked", on).property("disabled", allOn);
+      });
+      d3.selectAll(".coord-tier-row").classed("is-disabled", allOn);
+    }
+
+    function coordClusterKeyForRow(d) {
+      if (state.coordNodeGroup === "island") return d.islandGroup || "Unassigned island group";
+      if (state.coordNodeGroup === "priority") return priorityTierLabel(d.priorityTier);
+      return displayRegionLabel(d.region) || d.region || "Unassigned region";
+    }
+
+    function coordSimilarPriority(a, b) {
+      const sa = a.priority_vuln_gap;
+      const sb = b.priority_vuln_gap;
+      if (!Number.isFinite(sa) || !Number.isFinite(sb)) return false;
+      if (a.priorityTier === b.priorityTier) return true;
+      return Math.abs(sa - sb) <= 0.045;
+    }
+
+    function coordSimilarProfile(a, b) {
+      const va = a.vulnerability;
+      const vb = b.vulnerability;
+      const ga = a.capacity_gap;
+      const gb = b.capacity_gap;
+      if (![va, vb, ga, gb].every(Number.isFinite)) return false;
+      const dist = Math.hypot(va - vb, ga - gb);
+      return dist <= 0.12;
+    }
+
+    function coordSimilarRiskProfile(a, b) {
+      const px = Number.isFinite(a.poverty_n) ? a.poverty_n : a.poverty;
+      const py = Number.isFinite(b.poverty_n) ? b.poverty_n : b.poverty;
+      const hx = Number.isFinite(a.hazard_n) ? a.hazard_n : a.hazard;
+      const hy = Number.isFinite(b.hazard_n) ? b.hazard_n : b.hazard;
+      if ([px, py, hx, hy].every(Number.isFinite) && px <= 1 && py <= 1) {
+        return Math.hypot(px - py, hx - hy) <= 0.14;
+      }
+      return Math.abs(a.poverty - b.poverty) <= 5 && Math.abs(a.hazard - b.hazard) <= 0.1;
+    }
+
+    function coordWeakCapacityPair(a, b, nodes) {
+      const vulnMed = d3.median(nodes, d => d.vulnerability) ?? 0.5;
+      const gapMed = d3.median(nodes, d => d.capacity_gap) ?? 0.5;
+      const aStress = Number.isFinite(a.vulnerability) && Number.isFinite(a.capacity_gap)
+        && a.vulnerability >= vulnMed && a.capacity_gap >= gapMed;
+      const bStress = Number.isFinite(b.vulnerability) && Number.isFinite(b.capacity_gap)
+        && b.vulnerability >= vulnMed && b.capacity_gap >= gapMed;
+      return aStress && bStress && (coordSimilarProfile(a, b) || a.priorityTier === b.priorityTier);
+    }
+
+    function buildCoordinationLinks(nodes) {
+      const lens = state.coordPlanningLens || "shared";
+      const edgeSet = new Set();
+      const links = [];
+      const n = nodes.length;
+      const addEdge = (a, b) => {
+        if (a.id === b.id) return;
+        const key = a.id < b.id ? `${a.id}|${b.id}` : `${b.id}|${a.id}`;
+        if (edgeSet.has(key)) return;
+        edgeSet.add(key);
+        links.push({ source: a.id, target: b.id, kind: lens });
+      };
+
+      for (let i = 0; i < n; i += 1) {
+        for (let j = i + 1; j < n; j += 1) {
+          const a = nodes[i];
+          const b = nodes[j];
+          const sameRegion = a.region && a.region === b.region;
+          const sameIsland = a.islandGroup && b.islandGroup && a.islandGroup === b.islandGroup;
+          const simPriority = coordSimilarPriority(a, b);
+          const simProfile = coordSimilarProfile(a, b);
+          const simRisk = coordSimilarRiskProfile(a, b);
+          const weakCap = coordWeakCapacityPair(a, b, nodes);
+
+          if (lens === "shared") {
+            if (sameRegion || sameIsland || simPriority || simProfile || simRisk) addEdge(a, b);
+          } else if (lens === "capacity") {
+            if (weakCap || simProfile) addEdge(a, b);
+          } else if (lens === "priority") {
+            if (simPriority) addEdge(a, b);
+          } else if (lens === "risk_profile") {
+            if (simRisk) addEdge(a, b);
+          } else if (lens === "admin") {
+            if (sameRegion || sameIsland) addEdge(a, b);
+          }
+        }
+      }
+      return links;
+    }
+
+    function computeCoordinationClusters(classified) {
+      const nodes = getCoordinationNodeRows(classified);
+      const groups = d3.group(nodes, coordClusterKeyForRow);
+      const priorityTiers = new Set(["highest", "high"]);
+      const clusters = [...groups.entries()].map(([name, members]) => {
+        const priorityMembers = members.filter(d => priorityTiers.has(d.priorityTier));
+        const scores = members.map(d => d.priority_vuln_gap).filter(Number.isFinite);
+        const avgScore = scores.length ? d3.mean(scores) : 0;
+        const tierCounts = d3.rollup(members, v => v.length, d => d.priorityTier);
+        let dominantTier = "lowest";
+        let maxCount = 0;
+        PRIORITY_TIER_ORDER.forEach(tier => {
+          const c = tierCounts.get(tier) || 0;
+          if (c > maxCount) {
+            maxCount = c;
+            dominantTier = tier;
+          }
+        });
+        const rankScore = priorityMembers.length * 2 + avgScore;
+        return {
+          key: name,
+          name,
+          members,
+          nProvinces: members.length,
+          nPriority: priorityMembers.length,
+          avgScore,
+          dominantTier,
+          rankScore
+        };
+      });
+      return clusters.sort((a, b) => d3.descending(a.rankScore, b.rankScore));
+    }
+
+    function renderCoordinationClusterRank(classified) {
+      const panel = d3.select("#coordClusterRankPanel");
+      panel.selectAll("*").remove();
+      const clusters = computeCoordinationClusters(classified);
+      state._coordClusters = clusters;
+      if (!clusters.length) {
+        panel.append("p").attr("class", "small").text("No provinces match the current filter.");
+        return;
+      }
+      clusters.slice(0, 12).forEach(cl => {
+        const row = panel.append("div")
+          .attr("class", "coord-cluster-row")
+          .classed("active", state.coordSelectedClusterKey === cl.key);
+        row.append("div").attr("class", "coord-cluster-name").text(cl.name);
+        row.append("div").attr("class", "coord-cluster-meta").html(
+          `${cl.nPriority} priority province${cl.nPriority === 1 ? "" : "s"} · avg score ${cl.avgScore.toFixed(3)} · ${cl.nProvinces} shown`
+        );
+        row.append("div")
+          .attr("class", "coord-cluster-tier")
+          .style("color", priorityTierColor(cl.dominantTier))
+          .text(`Dominant class: ${priorityTierLabel(cl.dominantTier)}`);
+        row.on("click", () => {
+          state.coordSelectedClusterKey = cl.key;
+          state.coordSelectedProvince = null;
+          renderCoordinationSummary(classified);
+          renderCoordinationClusterRank(classified);
+          if (state._coordGraphNodes) renderCoordinationNetworkGraph(state._coordGraphNodes, state._coordGraphLinks);
+        });
+      });
+    }
+
+    function renderCoordinationSummary(classified) {
+      const dl = d3.select("#coordSummaryBody");
+      dl.selectAll("*").remove();
+      const lens = state.coordPlanningLens || "shared";
+      const nodes = state._coordGraphNodes || getCoordinationNodeRows(classified).map(d => ({
+        ...d,
+        id: coordProvinceKey(d)
+      }));
+      const links = state._coordGraphLinks || buildCoordinationLinks(nodes);
+
+      if (!nodes.length) {
+        appendCoordSummaryField(dl, "Status", "Adjust filters to view coordination clusters.");
+        return;
+      }
+
+      const selProvince = state.coordSelectedProvince
+        ? nodes.find(d => d.province === state.coordSelectedProvince.province)
+        : null;
+      if (state.coordSelectedProvince && !selProvince) {
+        appendCoordSummaryField(
+          dl,
+          "Status",
+          `${state.coordSelectedProvince.province} is not in the current network filter. Include its priority class or choose All provinces to see links.`
+        );
+        return;
+      }
+      const clusters = state._coordClusters || computeCoordinationClusters(classified);
+      const selCluster = state.coordSelectedClusterKey
+        ? clusters.find(c => c.key === state.coordSelectedClusterKey)
+        : null;
+
+      let selectionLabel;
+      let selectionName;
+      let profileRows;
+      let connectedRows;
+      let actionTier;
+
+      if (selProvince) {
+        selectionLabel = "Selected province";
+        selectionName = selProvince.province;
+        profileRows = [selProvince, ...coordGraphNeighborProvinces(selProvince, nodes, links)];
+        connectedRows = coordGraphNeighborProvinces(selProvince, nodes, links);
+        actionTier = selProvince.priorityTier;
+      } else if (selCluster) {
+        selectionLabel = "Selected cluster";
+        selectionName = selCluster.name;
+        profileRows = selCluster.members;
+        if (selCluster.members.length === 1) {
+          connectedRows = coordGraphNeighborProvinces(selCluster.members[0], nodes, links);
+        } else {
+          connectedRows = selCluster.members
+            .slice()
+            .sort((a, b) => d3.descending(a.priority_vuln_gap, b.priority_vuln_gap));
+        }
+        actionTier = selCluster.dominantTier;
+      } else {
+        selectionLabel = "Current network view";
+        selectionName = `${nodes.length} province${nodes.length === 1 ? "" : "s"} shown`;
+        profileRows = nodes;
+        connectedRows = [];
+        actionTier = coordDominantTier(nodes);
+      }
+
+      const maxShow = 4;
+      const connectedNames = connectedRows.map(d => d.province);
+      const shown = connectedNames.slice(0, maxShow);
+      const moreCount = Math.max(0, connectedNames.length - shown.length);
+
+      const basisMode = selProvince ? "province" : (selCluster ? "cluster" : "network");
+      const basisCtx = {
+        lens,
+        mode: basisMode,
+        province: selProvince || null,
+        cluster: selCluster || null,
+        neighborCount: connectedRows.length,
+        networkCount: nodes.length,
+        networkGaps: nodes.map(d => d.capacity_gap).filter(Number.isFinite),
+        referenceRows: nodes,
+        breakReferenceRows: classified,
+        connectedPeers: connectedRows
+      };
+
+      let basisText = coordConnectionBasisCopy(basisCtx);
+      let inCommon = coordInCommonCopy(profileRows, lens, selProvince || null);
+      let action = PRIORITY_ACTION_BY_TIER[actionTier] || PRIORITY_ACTION_BY_TIER.moderate;
+      let inCommonLabel = "In common";
+      let actionLabel = "Recommended action";
+
+      if (lens === "risk_profile" && selProvince) {
+        const snap = coordRiskProfileSnapshot({
+          name: selProvince.province,
+          hazard: coordProvinceHazard(selProvince),
+          vulnerability: coordProvinceVulnerability(selProvince),
+          referenceRows: nodes,
+          breakReferenceRows: classified,
+          row: selProvince,
+          hasPeers: connectedRows.length > 0,
+          isCluster: false
+        });
+        basisText = snap.why;
+        inCommon = snap.sharedIssue;
+        action = snap.action;
+        inCommonLabel = "Shared planning issue";
+        actionLabel = "Suggested planning action";
+      } else if (lens === "risk_profile" && selCluster) {
+        const snap = coordRiskProfileSnapshot({
+          name: selCluster.name,
+          hazard: d3.mean(selCluster.members, d => coordProvinceHazard(d)),
+          vulnerability: d3.mean(selCluster.members, d => coordProvinceVulnerability(d)),
+          referenceRows: nodes,
+          breakReferenceRows: classified,
+          row: {
+            priority_vuln_gap: d3.mean(selCluster.members, d => d.priority_vuln_gap),
+            priorityTier: selCluster.members.some(d => d.priorityTier === "highest")
+              ? "highest"
+              : selCluster.dominantTier,
+            capacity_gap: d3.mean(selCluster.members, d => coordRowCapacityGap(d))
+          },
+          hasPeers: connectedRows.length > 0,
+          isCluster: true
+        });
+        basisText = snap.why;
+        inCommon = snap.sharedIssue;
+        action = snap.action;
+        inCommonLabel = "Shared planning issue";
+        actionLabel = "Suggested planning action";
+      } else if (lens === "admin" && selProvince) {
+        const snap = coordAdminProvinceSnapshot(selProvince, connectedRows);
+        basisText = snap.why;
+        inCommon = snap.sharedIssue;
+        action = snap.action;
+        inCommonLabel = "Shared planning issue";
+        actionLabel = "Suggested planning action";
+      } else if (lens === "admin" && selCluster) {
+        const snap = selCluster.members.length > 1
+          ? coordAdminClusterSnapshot(selCluster)
+          : coordAdminProvinceSnapshot(selCluster.members[0], connectedRows);
+        basisText = snap.why;
+        inCommon = snap.sharedIssue;
+        action = snap.action;
+        inCommonLabel = "Shared planning issue";
+        actionLabel = "Suggested planning action";
+      } else if (lens === "shared" && selProvince) {
+        const snap = coordSharedInterventionSnapshot({
+          name: selProvince.province,
+          row: selProvince,
+          referenceRows: nodes,
+          peers: connectedRows,
+          isCluster: false
+        });
+        basisText = snap.why;
+        inCommon = snap.sharedIssue;
+        action = snap.action;
+        inCommonLabel = "Shared planning issue";
+        actionLabel = "Suggested planning action";
+      } else if (lens === "shared" && selCluster) {
+        const avgRow = coordSharedInterventionRowFromMembers(selCluster.members);
+        const snap = coordSharedInterventionSnapshot({
+          name: selCluster.name,
+          row: avgRow,
+          referenceRows: nodes,
+          peers: connectedRows,
+          clusterMembers: selCluster.members,
+          isCluster: true
+        });
+        basisText = snap.why;
+        inCommon = snap.sharedIssue;
+        action = snap.action;
+        inCommonLabel = "Shared planning issue";
+        actionLabel = "Suggested planning action";
+      }
+
+      let planningNote = COORD_PLANNING_NOTE;
+      if (lens === "shared") planningNote = COORD_SHARED_PLANNING_NOTE;
+      if (lens === "admin") planningNote = COORD_ADMIN_PLANNING_NOTE;
+
+      appendCoordSummaryField(dl, selectionLabel, selectionName);
+      appendCoordSummaryField(dl, "Active lens", coordPlanningLensLabel());
+      appendCoordSummaryField(dl, "Why linked", basisText);
+
+      if (selProvince || selCluster) {
+        if (shown.length) {
+          appendCoordSummaryField(dl, "Linked peers", null, {
+            connectedList: shown,
+            connectedMore: moreCount
+          });
+        } else {
+          appendCoordSummaryField(dl, "Linked peers", coordNoPeersMessage(lens));
+        }
+      } else {
+        appendCoordSummaryField(
+          dl,
+          "Linked peers",
+          "Select a province or cluster in the network or left panel to list peers."
+        );
+      }
+
+      appendCoordSummaryField(dl, inCommonLabel, inCommon);
+      appendCoordSummaryField(dl, actionLabel, action, { pill: true });
+
+      const noteBlock = dl.append("div").attr("class", "coord-summary-note");
+      noteBlock.append("dt").text("Planning note");
+      noteBlock.append("dd").text(planningNote);
+    }
+
+    function renderCoordinationLegend() {
+      const leg = d3.select("#coordNetworkLegend");
+      leg.selectAll("*").remove();
+      leg.append("h4").text("Network legend");
+      const sizeRow = leg.append("div").attr("class", "coord-leg-row");
+      sizeRow.append("span").attr("class", "coord-leg-dot-demo").style("width", "18px").style("height", "18px");
+      sizeRow.append("span").text("Larger nodes = higher priority score");
+      PRIORITY_TIER_ORDER.forEach(tier => {
+        const row = leg.append("div").attr("class", "coord-leg-row");
+        row.append("span").attr("class", "coord-leg-swatch").style("background", priorityTierColor(tier));
+        row.append("span").text(priorityTierLabel(tier));
+      });
+      const lineRow = leg.append("div").attr("class", "coord-leg-row");
+      lineRow.append("span").attr("class", "coord-leg-line");
+      lineRow.append("span").text(`Lines reflect the active lens: ${coordPlanningLensLabel().toLowerCase()}.`);
+      leg.append("p").attr("class", "coord-network-note").text("Prototype similarity-based relationships—not observed administrative ties or formal MOUs.");
+    }
+
+    function coordinationTooltipHtml(d) {
+      const region = displayRegionLabel(d.region) || "—";
+      const isl = d.islandGroup || "—";
+      const vuln = Number.isFinite(d.vulnerability)
+        ? d.vulnerability
+        : (Number.isFinite(d.poverty_n) && Number.isFinite(d.hazard_n) ? (d.poverty_n + d.hazard_n) / 2 : NaN);
+      const gap = Number.isFinite(d.capacity_gap)
+        ? d.capacity_gap
+        : (Number.isFinite(d.capacity_n) ? 1 - d.capacity_n : NaN);
+      const vulnStr = Number.isFinite(vuln) ? vuln.toFixed(3) : "—";
+      const gapStr = Number.isFinite(gap) ? gap.toFixed(3) : "—";
+      const scoreStr = Number.isFinite(d.priority_vuln_gap) ? d.priority_vuln_gap.toFixed(3) : "—";
+      const capStr = Number.isFinite(d.capacity_index) ? d.capacity_index.toFixed(3) : "—";
+      const povStr = Number.isFinite(d.poverty) ? `${d.poverty.toFixed(1)}%` : "—";
+      const hazStr = Number.isFinite(d.hazard) ? d.hazard.toFixed(3) : "—";
+      const tier = priorityTierLabel(d.priorityTier);
+      const color = priorityTierColor(d.priorityTier);
+      return `<strong style="font-size:13px;">${d.province}</strong><br><br>` +
+        `Region: ${region}<br>Island group: ${isl}<br><br>` +
+        `Priority class: <span style="color:${color};font-weight:700;">${tier}</span><br>` +
+        `Vulnerability: <strong>${vulnStr}</strong><br>` +
+        `Capacity gap: <strong>${gapStr}</strong><br>` +
+        `Priority score: <strong>${scoreStr}</strong><br><br>` +
+        `Coping capacity index: ${capStr}<br>` +
+        `Poverty incidence: ${povStr}<br>` +
+        `Hazard exposure: ${hazStr}`;
+    }
+
+    function renderCoordinationNetworkGraph(nodes, links) {
+      const svg = d3.select("#coordinationNetwork");
+      svg.selectAll("*").remove();
+      if (!nodes.length) {
+        const msg = state.coordFilterAll
+          ? "No provinces match the current network filter."
+          : (state.coordFilterTiers && state.coordFilterTiers.size === 0
+            ? "Select at least one priority class below, or choose All provinces."
+            : "No provinces match the selected priority classes and filters.");
+        svg.append("text")
+          .attr("x", 500).attr("y", 340)
+          .attr("text-anchor", "middle")
+          .attr("fill", "#dbe7f7")
+          .style("font-size", "16px")
+          .text(msg);
+        return;
+      }
+
+      const width = 1000;
+      const height = 680;
+      svg.attr("viewBox", `0 0 ${width} ${height}`);
+
+      if (state._coordSimulation) {
+        state._coordSimulation.stop();
+        state._coordSimulation = null;
+      }
+
+      const scoreExtent = d3.extent(nodes, d => d.priority_vuln_gap);
+      const rScale = d3.scaleSqrt()
+        .domain(scoreExtent.every(Number.isFinite) ? scoreExtent : [0, 1])
+        .range([7, 26]);
+
+      const nodesById = new Map();
+      nodes.forEach(n => {
+        if (!nodesById.has(n.id)) nodesById.set(n.id, n);
+      });
+      const simNodes = [...nodesById.values()];
+      const linkIdMap = nodesById;
+      const simLinks = links.map(l => ({
+        source: typeof l.source === "object" ? l.source : linkIdMap.get(l.source),
+        target: typeof l.target === "object" ? l.target : linkIdMap.get(l.target),
+        kind: l.kind
+      })).filter(l => l.source && l.target);
+
+      const zoomLayer = svg.append("g").attr("class", "coord-zoom-layer");
+      if (!state.coordNetworkZoomTransform) state.coordNetworkZoomTransform = d3.zoomIdentity;
+      zoomLayer.attr("transform", state.coordNetworkZoomTransform);
+
+      const g = zoomLayer.append("g");
+
+      const linkNodeId = (n) => (typeof n === "object" && n != null ? n.id : n);
+
+      const selectedKey = state.coordSelectedProvince
+        ? coordProvinceKey(state.coordSelectedProvince)
+        : null;
+      const neighborKeys = new Set();
+      if (selectedKey) {
+        simLinks.forEach(l => {
+          const sid = linkNodeId(l.source);
+          const tid = linkNodeId(l.target);
+          if (sid === selectedKey) neighborKeys.add(tid);
+          if (tid === selectedKey) neighborKeys.add(sid);
+        });
+      }
+
+      const clusterKeys = new Set();
+      if (state.coordSelectedClusterKey && state._coordClusters) {
+        const cl = state._coordClusters.find(c => c.key === state.coordSelectedClusterKey);
+        if (cl) cl.members.forEach(m => clusterKeys.add(coordProvinceKey(m)));
+      }
+
+      const linkSel = g.append("g").attr("class", "coord-links")
+        .selectAll("line")
+        .data(simLinks)
+        .join("line")
+        .attr("stroke", "rgba(158, 180, 216, 0.55)")
+        .attr("stroke-width", d => {
+          const s = linkNodeId(d.source);
+          const t = linkNodeId(d.target);
+          if (selectedKey && (s === selectedKey || t === selectedKey)) return 2.2;
+          return 1.1;
+        })
+        .attr("opacity", d => {
+          const s = linkNodeId(d.source);
+          const t = linkNodeId(d.target);
+          if (!selectedKey && !clusterKeys.size) return 0.45;
+          if (selectedKey) return (s === selectedKey || t === selectedKey) ? 0.85 : 0.08;
+          if (clusterKeys.size) return (clusterKeys.has(s) && clusterKeys.has(t)) ? 0.7 : 0.1;
+          return 0.2;
+        });
+
+      const nodeSel = g.append("g").attr("class", "coord-nodes")
+        .selectAll("circle")
+        .data(nodes)
+        .join("circle")
+        .attr("r", d => rScale(d.priority_vuln_gap))
+        .attr("fill", d => priorityTierColor(d.priorityTier))
+        .attr("stroke", d => {
+          const k = coordProvinceKey(d);
+          if (selectedKey && k === selectedKey) return "#fff8e8";
+          if (neighborKeys.has(k)) return "rgba(255, 248, 232, 0.9)";
+          return "rgba(255,255,255,0.55)";
+        })
+        .attr("stroke-width", d => {
+          const k = coordProvinceKey(d);
+          if (selectedKey && k === selectedKey) return 2.5;
+          if (neighborKeys.has(k)) return 1.8;
+          return 0.9;
+        })
+        .attr("opacity", d => {
+          const k = coordProvinceKey(d);
+          if (!selectedKey && !clusterKeys.size) return 0.92;
+          if (selectedKey) return (k === selectedKey || neighborKeys.has(k)) ? 1 : 0.18;
+          if (clusterKeys.size) return clusterKeys.has(k) ? 1 : 0.2;
+          return 0.35;
+        })
+        .style("cursor", "pointer")
+        .call(d3.drag()
+          .on("start", (event, d) => {
+            if (!event.active) state._coordSimulation.alphaTarget(0.25).restart();
+            d.fx = d.x;
+            d.fy = d.y;
+          })
+          .on("drag", (event, d) => {
+            d.fx = event.x;
+            d.fy = event.y;
+          })
+          .on("end", (event, d) => {
+            if (!event.active) state._coordSimulation.alphaTarget(0);
+            d.fx = null;
+            d.fy = null;
+          }))
+        .on("mouseenter", (event, d) => {
+          tip.style("opacity", 1)
+            .style("left", `${event.clientX + 12}px`)
+            .style("top", `${event.clientY + 12}px`)
+            .html(coordinationTooltipHtml(d));
+        })
+        .on("mouseleave", () => tip.style("opacity", 0))
+        .on("click", (event, d) => {
+          event.stopPropagation();
+          state.coordSelectedProvince = d;
+          state.coordSelectedClusterKey = null;
+          renderCoordinationSummary(state._latestClassified || []);
+          renderCoordinationClusterRank(state._latestClassified || []);
+          renderCoordinationNetworkGraph(nodes, links);
+        });
+
+      state._coordSimulation = d3.forceSimulation(simNodes)
+        .force("link", d3.forceLink(simLinks).id(d => d.id).distance(72).strength(0.35))
+        .force("charge", d3.forceManyBody().strength(-140))
+        .force("center", d3.forceCenter(width / 2, height / 2))
+        .force("collide", d3.forceCollide().radius(d => rScale(d.priority_vuln_gap) + 4))
+        .on("tick", () => {
+          linkSel
+            .attr("x1", d => d.source.x)
+            .attr("y1", d => d.source.y)
+            .attr("x2", d => d.target.x)
+            .attr("y2", d => d.target.y);
+          nodeSel
+            .attr("cx", d => d.x)
+            .attr("cy", d => d.y);
+        });
+
+      const zoom = d3.zoom()
+        .scaleExtent([0.35, 4])
+        .filter((event) => {
+          if (event.type === "wheel") return true;
+          const t = event.target;
+          return !(t instanceof Element && t.closest(".coord-nodes"));
+        })
+        .on("zoom", (event) => {
+          state.coordNetworkZoomTransform = event.transform;
+          zoomLayer.attr("transform", event.transform);
+        });
+      svg.call(zoom);
+      svg.call(zoom.transform, state.coordNetworkZoomTransform);
+      state._coordZoomBehavior = zoom;
+    }
+
+    function renderCoordinationNetwork(classified) {
+      const nodes = getCoordinationNodeRows(classified)
+        .map(d => ({
+          ...d,
+          id: coordProvinceKey(d)
+        }));
+      const links = buildCoordinationLinks(nodes);
+      state._coordGraphNodes = nodes;
+      state._coordGraphLinks = links;
+      renderCoordinationLegend();
+      renderCoordinationNetworkGraph(nodes, links);
+    }
+
+    function renderCoordinationTab6(classified) {
+      if (state.step !== 6) return;
+      updateCoordPlanningLensHelper();
+      syncCoordFilterControlsUI();
+      const groupLabel = state.coordNodeGroup === "island"
+        ? "island group"
+        : (state.coordNodeGroup === "priority" ? "priority class" : "region");
+      d3.select("#coordinationLeftRail .coordination-left-sub").text(
+        `Clusters grouped by ${groupLabel}. Ranked by priority-province count and average priority score.`
+      );
+      renderCoordinationClusterRank(classified);
+      renderCoordinationSummary(classified);
+      renderCoordinationNetwork(classified);
+    }
+
+    function initCoordinationControls(rows, tracks, provinces) {
+      d3.select("#coordPlanningLens").property("value", state.coordPlanningLens);
+      updateCoordPlanningLensHelper();
+      d3.select("#coordPlanningLens").on("change", function () {
+        state.coordPlanningLens = this.value;
+        updateCoordPlanningLensHelper();
+        state.coordNetworkZoomTransform = null;
+        renderAll(rows, tracks, provinces);
+      });
+      d3.selectAll('input[name="coordNodeGroup"]').property("checked", function () {
+        return this.value === state.coordNodeGroup;
+      });
+      d3.selectAll('input[name="coordNodeGroup"]').on("change", function () {
+        state.coordNodeGroup = this.value;
+        state.coordSelectedClusterKey = null;
+        renderAll(rows, tracks, provinces);
+      });
+      syncCoordFilterControlsUI();
+
+      function onCoordFilterChanged() {
+        state.coordSelectedProvince = null;
+        state.coordSelectedClusterKey = null;
+        state.coordNetworkZoomTransform = null;
+        syncCoordFilterControlsUI();
+        renderAll(rows, tracks, provinces);
+      }
+
+      d3.select("#coordFilterAll").on("change", function () {
+        state.coordFilterAll = this.checked;
+        if (state.coordFilterAll) {
+          state.coordFilterTiers = new Set();
+        }
+        onCoordFilterChanged();
+      });
+
+      d3.select("#coordFilterTop20").on("change", function () {
+        state.coordFilterTop20 = this.checked;
+        onCoordFilterChanged();
+      });
+
+      d3.selectAll(".coord-tier-check").on("change", function () {
+        if (!state.coordFilterTiers) state.coordFilterTiers = new Set();
+        if (this.checked) {
+          state.coordFilterAll = false;
+          state.coordFilterTiers.add(this.value);
+        } else {
+          state.coordFilterTiers.delete(this.value);
+          if (state.coordFilterTiers.size === 0) state.coordFilterAll = true;
+        }
+        onCoordFilterChanged();
+      });
+      d3.select("#coordNetworkResetBtn").on("click", () => {
+        state.coordNetworkZoomTransform = d3.zoomIdentity;
+        state.coordSelectedProvince = null;
+        if (state._coordSimulation && state._coordGraphNodes) {
+          state._coordGraphNodes.forEach(n => { n.fx = null; n.fy = null; });
+          state._coordSimulation.alpha(0.9).restart();
+        }
+        const svg = d3.select("#coordinationNetwork");
+        if (state._coordZoomBehavior) svg.transition().duration(400).call(state._coordZoomBehavior.transform, d3.zoomIdentity);
+        renderCoordinationSummary(state._latestClassified || []);
+        renderCoordinationClusterRank(state._latestClassified || []);
+        if (state._coordGraphNodes && state._coordGraphLinks) {
+          renderCoordinationNetworkGraph(state._coordGraphNodes, state._coordGraphLinks);
+        }
+      });
     }
 
     function renderInsights(classified, filtered) {
