@@ -1429,6 +1429,19 @@
       gap: 4px;
     }
 
+    .brand.brand--home-link {
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .brand.brand--home-link:hover {
+      border-color: rgba(122, 160, 255, 0.45);
+      box-shadow: 0 0 0 1px rgba(59, 95, 255, 0.12);
+    }
+    .brand.brand--home-link:focus-visible {
+      outline: 2px solid rgba(160, 205, 255, 0.95);
+      outline-offset: 2px;
+    }
+
     .brand h1 {
       margin: 0;
       font-size: 15px;
@@ -3226,6 +3239,277 @@
       padding: 0;
     }
 
+    /* Landing page / home screen */
+    .dashboard.dashboard--home {
+      grid-template-columns: 230px minmax(620px, 1fr) minmax(300px, 480px);
+      grid-template-rows: auto auto minmax(0, 1fr);
+      grid-template-areas:
+        "brand nav topactions"
+        "home home home";
+    }
+    .dashboard.dashboard--home > .dashboard-home {
+      grid-area: home;
+      min-height: 0;
+    }
+    .dashboard.dashboard--home > .controls,
+    .dashboard.dashboard--home > .title-card,
+    .dashboard.dashboard--home > .map-card,
+    .dashboard.dashboard--home > .side-panel,
+    .dashboard.dashboard--home > .left-rail,
+    .dashboard.dashboard--home > .overlap-left-rail,
+    .dashboard.dashboard--home > .priority-left-rail,
+    .dashboard.dashboard--home > .coordination-left-rail,
+    .dashboard.dashboard--home > .coordination-network-card,
+    .dashboard.dashboard--home > .coordination-side-panel,
+    .dashboard.dashboard--home > .bottom {
+      display: none !important;
+    }
+
+    .dashboard-home {
+      padding: 18px 20px 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      overflow-y: auto;
+    }
+    .home-hero-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 1.1fr) minmax(260px, 0.9fr) minmax(240px, 0.85fr);
+      gap: 16px;
+      align-items: stretch;
+    }
+    .home-hero-title {
+      margin: 0 0 12px;
+      font-size: clamp(26px, 2.6vw, 36px);
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+    }
+    .home-hero-subtitle {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+      max-width: 54ch;
+    }
+    .home-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      color: #b8c9e8;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .home-meta-row span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+    .home-guided-card {
+      padding: 18px;
+      border: 1px solid rgba(96, 170, 152, 0.35);
+      background: linear-gradient(180deg, rgba(18, 34, 30, 0.95), rgba(14, 22, 28, 0.98));
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .home-guided-label {
+      margin: 0;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #8fd4bc;
+    }
+    .home-guided-title {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.25;
+    }
+    .home-guided-body {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      flex: 1;
+    }
+    .home-guided-btn {
+      width: 100%;
+      margin-top: 4px;
+      padding: 12px 16px;
+      border: 1px solid rgba(96, 170, 152, 0.45);
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      color: #dff5ef;
+      background: linear-gradient(180deg, rgba(52, 98, 88, 0.95) 0%, rgba(30, 58, 52, 0.98) 100%);
+      box-shadow: 0 0 18px rgba(64, 150, 130, 0.18);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+    .home-guided-btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(130, 210, 188, 0.55);
+      box-shadow: 0 0 22px rgba(80, 175, 150, 0.28);
+    }
+    .home-guided-note {
+      margin: 0;
+      font-size: 11px;
+      color: #8aa0c4;
+    }
+    .home-visual {
+      padding: 0;
+      min-height: 260px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(180deg, rgba(10, 16, 26, 0.55), rgba(8, 12, 20, 0.92));
+      border-color: rgba(122, 160, 255, 0.22);
+      box-shadow:
+        0 0 0 1px rgba(59, 95, 255, 0.08) inset,
+        0 12px 32px rgba(0, 0, 0, 0.28);
+    }
+    .landing-visual-panel {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 260px;
+      padding: 14px;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 35% 30%, rgba(59, 95, 255, 0.1), transparent 52%),
+        radial-gradient(circle at 72% 68%, rgba(159, 44, 255, 0.08), transparent 48%);
+    }
+    .landing-visual-asset {
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      max-height: min(420px, 52vh);
+      object-fit: contain;
+      object-position: center;
+      display: block;
+      image-rendering: auto;
+      border-radius: 10px;
+    }
+
+    .home-pathways {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .home-path-card {
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: rgba(18, 27, 40, 0.72);
+      cursor: pointer;
+      text-align: left;
+      font-family: inherit;
+      color: inherit;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .home-path-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.28);
+    }
+    .home-path-card:focus-visible {
+      outline: 2px solid rgba(160, 205, 255, 0.95);
+      outline-offset: 2px;
+    }
+    .home-path-card.path-risk { border-color: rgba(59, 95, 255, 0.35); }
+    .home-path-card.path-risk:hover { border-color: rgba(122, 160, 255, 0.55); }
+    .home-path-card.path-priority { border-color: rgba(255, 143, 42, 0.35); }
+    .home-path-card.path-priority:hover { border-color: rgba(255, 176, 96, 0.55); }
+    .home-path-card.path-coord { border-color: rgba(159, 44, 255, 0.35); }
+    .home-path-card.path-coord:hover { border-color: rgba(180, 110, 255, 0.55); }
+    .home-path-title {
+      margin: 0 0 6px;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+    .home-path-subtitle {
+      margin: 0 0 10px;
+      color: #b8c9e8;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .home-path-body {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .home-tab-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .home-tab-chip {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 7px;
+      border: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 10px;
+      font-weight: 700;
+      color: #c8d8f4;
+    }
+    .home-path-action {
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .home-path-card.path-risk .home-path-action { color: #9eb8ff; }
+    .home-path-card.path-priority .home-path-action { color: #ffb86a; }
+    .home-path-card.path-coord .home-path-action { color: #c9a0ff; }
+
+    .home-howto {
+      padding: 16px 18px 14px;
+    }
+    .home-howto-title {
+      margin: 0 0 12px;
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #b8c9e8;
+    }
+    .home-howto-steps {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .home-howto-step {
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .home-howto-step strong {
+      display: block;
+      font-size: 11px;
+      margin-bottom: 6px;
+      color: #dbe7ff;
+    }
+    .home-howto-step p {
+      margin: 0;
+      font-size: 11px;
+      line-height: 1.45;
+      color: var(--muted);
+    }
+    .home-howto-footer {
+      margin: 12px 0 0;
+      font-size: 12px;
+      color: #9eb4d8;
+      line-height: 1.5;
+    }
+
     @media (max-width: 1200px) {
       .dashboard {
         grid-template-columns: 1fr;
@@ -3243,6 +3527,27 @@
         grid-template-columns: 1fr;
         grid-template-rows: auto;
         grid-template-areas: none;
+      }
+      .dashboard.dashboard--home {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+        grid-template-areas: none;
+      }
+      .dashboard.dashboard--home > .brand,
+      .dashboard.dashboard--home > .nav,
+      .dashboard.dashboard--home > .topactions,
+      .dashboard.dashboard--home > .dashboard-home {
+        grid-column: 1 / -1 !important;
+        grid-row: auto !important;
+      }
+      .home-hero-grid {
+        grid-template-columns: 1fr;
+      }
+      .home-pathways {
+        grid-template-columns: 1fr;
+      }
+      .home-howto-steps {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
       .dashboard.dashboard--choro > .brand,
       .dashboard.dashboard--choro > .nav,
@@ -3321,14 +3626,14 @@
 </head>
 <body>
   <div class="dashboard dashboard--choro">
-    <section class="brand card">
+    <section class="brand card brand--home-link" id="dashboardBrand" role="button" tabindex="0" aria-label="Return to dashboard home">
       <h1>Disaster Risk & Vulnerability in the Philippines</h1>
       <p>Decision-Support Dashboard</p>
     </section>
 
     <nav class="nav card">
       <div class="step-tabs" id="stepTabs">
-        <button type="button" class="step-tab active" data-step="1"><strong>1 Hazard</strong><span>Exposure</span></button>
+        <button type="button" class="step-tab" data-step="1"><strong>1 Hazard</strong><span>Exposure</span></button>
         <button type="button" class="step-tab" data-step="2"><strong>2 Capacity</strong><span>Coping Capacity</span></button>
         <button type="button" class="step-tab" data-step="3"><strong>3 Poverty</strong><span>Vulnerability</span></button>
         <button type="button" class="step-tab" data-step="4"><strong>4 Overlap</strong><span>Risk Interaction</span></button>
@@ -3492,6 +3797,104 @@
           <p>The dashboard should therefore be viewed as a strategic screening and prioritization tool, not a definitive causal model.</p>
           <p>Its primary value lies in helping planners recognize emerging patterns, compare relative vulnerability, identify overlap areas, and guide deeper investigation and targeted intervention planning.</p>
         </div>
+      </article>
+    </section>
+
+    <section id="dashboardHome" class="dashboard-home card" aria-label="Dashboard home">
+      <div class="home-hero-grid">
+        <div class="home-hero-copy">
+          <h2 class="home-hero-title">Evidence for stronger decisions. Resilience for every province.</h2>
+          <p class="home-hero-subtitle">Explore hazard exposure, vulnerability, and coping capacity across the Philippines. Identify priority provinces and look beyond jurisdictional boundaries through coordination and shared planning.</p>
+          <div class="home-meta-row" aria-label="Dashboard scope">
+            <span>82 provinces</span>
+            <span>17 regions</span>
+            <span>6 key analyses</span>
+          </div>
+        </div>
+
+        <article class="home-guided-card card">
+          <p class="home-guided-label">Recommended starting point</p>
+          <h3 class="home-guided-title">Start with Guided Analysis</h3>
+          <p class="home-guided-body">Follow a step-by-step path from hazard exposure to capacity, poverty, overlap, priority areas, and linked risk clusters.</p>
+          <button type="button" class="home-guided-btn" id="homeStartGuidedBtn">Start guided analysis →</button>
+          <p class="home-guided-note">Takes about 5–7 minutes</p>
+        </article>
+
+        <div class="home-visual card">
+          <div class="landing-visual-panel">
+            <img
+              src="./landing_page_visual_asset.png"
+              alt="Visual summary of hazard exposure, coping capacity, vulnerability, risk interaction, priority intervention, and coordination across the Philippines"
+              class="landing-visual-asset"
+              decoding="async"
+              loading="eager"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="home-pathways">
+        <button type="button" class="home-path-card card path-risk" id="homePathRisk" aria-label="Open hazard, capacity, poverty, and overlap analyses">
+          <h3 class="home-path-title">1. Understand Risk</h3>
+          <p class="home-path-subtitle">Explore the building blocks of risk</p>
+          <p class="home-path-body">Examine hazard exposure, coping capacity, poverty, and their overlap to understand where vulnerabilities are most concentrated.</p>
+          <div class="home-tab-chips" aria-hidden="true">
+            <span class="home-tab-chip">1 Hazard</span>
+            <span class="home-tab-chip">2 Capacity</span>
+            <span class="home-tab-chip">3 Poverty</span>
+            <span class="home-tab-chip">4 Overlap</span>
+          </div>
+          <span class="home-path-action">Open analysis 1–4 →</span>
+        </button>
+        <button type="button" class="home-path-card card path-priority" id="homePathPriority" aria-label="Go to priority intervention ranking">
+          <h3 class="home-path-title">2. Identify Priorities</h3>
+          <p class="home-path-subtitle">Focus on where it matters most</p>
+          <p class="home-path-body">See which provinces face the highest overall risk and require urgent intervention based on integrated evidence and priority scores.</p>
+          <div class="home-tab-chips" aria-hidden="true">
+            <span class="home-tab-chip">5 Priority</span>
+          </div>
+          <span class="home-path-action">Go to priority ranking →</span>
+        </button>
+        <button type="button" class="home-path-card card path-coord" id="homePathCoord" aria-label="Explore linked risk clusters and coordination planning">
+          <h3 class="home-path-title">3. Coordinate Planning</h3>
+          <p class="home-path-subtitle">Work beyond your jurisdiction</p>
+          <p class="home-path-body">Find provinces with similar risk profiles and planning needs. Learn from others and identify where shared interventions may be more effective.</p>
+          <div class="home-tab-chips" aria-hidden="true">
+            <span class="home-tab-chip">6 Coordination</span>
+          </div>
+          <span class="home-path-action">Explore linked risk clusters →</span>
+        </button>
+      </div>
+
+      <article class="home-howto card">
+        <h3 class="home-howto-title">How to read this dashboard</h3>
+        <div class="home-howto-steps">
+          <div class="home-howto-step">
+            <strong>1 Hazard Exposure</strong>
+            <p>Where are hazards most likely to occur?</p>
+          </div>
+          <div class="home-howto-step">
+            <strong>2 Coping Capacity</strong>
+            <p>Where are capacities strong or weak?</p>
+          </div>
+          <div class="home-howto-step">
+            <strong>3 Poverty &amp; Vulnerability</strong>
+            <p>Where are communities more vulnerable?</p>
+          </div>
+          <div class="home-howto-step">
+            <strong>4 Risk Interaction</strong>
+            <p>Where do hazards, poverty, and weak capacity overlap?</p>
+          </div>
+          <div class="home-howto-step">
+            <strong>5 Priority Intervention</strong>
+            <p>Which provinces need attention most?</p>
+          </div>
+          <div class="home-howto-step">
+            <strong>6 Coordination</strong>
+            <p>Which provinces should be planned together?</p>
+          </div>
+        </div>
+        <p class="home-howto-footer">Use the guided path for first-time use, or choose any analysis above to explore the data that matters to you.</p>
       </article>
     </section>
 
@@ -3895,6 +4298,7 @@
 
   <script>
     const state = {
+      showHome: true,
       step: 1,
       tab: "poverty_hazard",
       showTracks: false,
@@ -4267,14 +4671,16 @@
       loadProvinceGeoJSON()
     ]).then(([poverty, hazard, capacity, resilience, tracks, provinces]) => {
       const merged = buildMergedDataset(poverty, hazard, capacity, resilience);
-      // Start the dashboard at Step 1 (Hazard exposure), with tracks off by default.
+      state.showHome = true;
       state.step = 1;
       state.showTracks = false;
       d3.selectAll("#stepTabs .step-tab").classed("active", false);
-      d3.select('#stepTabs .step-tab[data-step="1"]').classed("active", true);
       initControls(merged);
       wireEvents(merged, tracks, provinces);
-      renderAll(merged, tracks, provinces);
+      state._rowsForRedraw = merged;
+      state._tracksForRedraw = tracks;
+      state._provincesForRedraw = provinces;
+      updateLayoutMode();
     }).catch(err => {
       console.error(err);
       alert("Failed to load files. Check that CSV/GeoJSON files are beside this HTML and that you are using a local server.");
@@ -4614,21 +5020,29 @@
         const n = Number(this.dataset.step);
         if (!Number.isFinite(n)) return;
         if (n === 5) state.prioritySelectedTier = "highest";
-        state.step = n;
-        d3.selectAll("#stepTabs .step-tab").classed("active", false);
-        d3.select(this).classed("active", true);
-        renderQuadrantLegend();
-        renderAll(rows, tracks, provinces);
+        openAnalysisStep(n, rows, tracks, provinces);
       });
 
       d3.select("#goPriorityBtn").on("click", () => {
         state.prioritySelectedTier = "highest";
-        state.step = 5;
-        d3.selectAll("#stepTabs .step-tab").classed("active", false);
-        d3.select('#stepTabs .step-tab[data-step="5"]').classed("active", true);
-        renderQuadrantLegend();
-        renderAll(rows, tracks, provinces);
+        openAnalysisStep(5, rows, tracks, provinces);
       });
+
+      const brand = document.getElementById("dashboardBrand");
+      if (brand) {
+        brand.addEventListener("click", () => openHomeScreen());
+        brand.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openHomeScreen();
+          }
+        });
+      }
+
+      d3.select("#homeStartGuidedBtn").on("click", () => startGuidedNarration());
+      d3.select("#homePathRisk").on("click", () => openAnalysisStep(1, rows, tracks, provinces));
+      d3.select("#homePathPriority").on("click", () => openAnalysisStep(5, rows, tracks, provinces));
+      d3.select("#homePathCoord").on("click", () => openAnalysisStep(6, rows, tracks, provinces));
 
       d3.selectAll('input[name="compareLevel"]').on("change", function () {
         state.compareLevel = this.value;
@@ -5372,6 +5786,8 @@
 
     function startGuidedNarration() {
       dismissGuidedCtaHint();
+      state.showHome = false;
+      updateLayoutMode();
       state._narrationActive = true;
       state._narrationSteps = NARRATION_STEPS;
       state._narrationIdx = 0;
@@ -5384,6 +5800,7 @@
     }
 
     function resetDashboardToHazardTab() {
+      state.showHome = false;
       state.step = 1;
       state.prioritySelectedTier = "highest";
       state.coordSelectedProvince = null;
@@ -5398,6 +5815,7 @@
       d3.select('#stepTabs .step-tab[data-step="1"]').classed("active", true);
       d3.select("#provinceCard").style("display", "none");
       renderQuadrantLegend();
+      updateLayoutMode();
     }
 
     function endGuidedNarration(markDone, opts = {}) {
@@ -5469,6 +5887,10 @@
 
     function goToStepForTour(step, opts = {}) {
       if (!Number.isFinite(step)) return;
+      if (state.showHome) {
+        state.showHome = false;
+        d3.select("#dashboardHome").classed("panel-hidden", true);
+      }
       const prevStep = state.step;
       const stepChanged = prevStep !== step;
       const nextTier = step === 5 && opts.priorityTier && PRIORITY_TIER_ORDER.includes(opts.priorityTier)
@@ -5863,6 +6285,32 @@
       d3.select("#spearmanInterpretation").text(copy.interpretation);
     }
 
+    function openHomeScreen() {
+      state.showHome = true;
+      d3.selectAll("#stepTabs .step-tab").classed("active", false);
+      updateLayoutMode();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function openAnalysisStep(step, rows, tracks, provinces) {
+      if (!Number.isFinite(step) || step < 1 || step > 6) return;
+      state.showHome = false;
+      state.step = step;
+      if (step === 5) state.prioritySelectedTier = "highest";
+      if (step === 6) {
+        state.coordSelectedProvince = null;
+        state.coordSelectedClusterKey = null;
+      }
+      d3.selectAll("#stepTabs .step-tab").classed("active", false);
+      d3.select(`#stepTabs .step-tab[data-step="${step}"]`).classed("active", true);
+      renderQuadrantLegend();
+      updateLayoutMode();
+      const r = rows || state._rowsForRedraw;
+      const p = provinces || state._provincesForRedraw;
+      const t = tracks !== undefined ? tracks : state._tracksForRedraw;
+      if (r && p) renderAll(r, t, p);
+    }
+
     function renderChoroAboutPanel() {
       const c = STEP_COPY[state.step];
       const paras = c?.aboutViewParagraphs || [];
@@ -5874,11 +6322,25 @@
     }
 
     function updateLayoutMode() {
+      const dash = d3.select(".dashboard");
+      if (state.showHome) {
+        dash.classed("dashboard--home", true);
+        dash.classed("dashboard--choro", false);
+        dash.classed("dashboard--overlap", false);
+        dash.classed("dashboard--priority", false);
+        dash.classed("dashboard--coordination", false);
+        dash.classed("dashboard--bivar", false);
+        dash.classed("step-accent-purple", false);
+        d3.select("#dashboardHome").classed("panel-hidden", false);
+        d3.select("#progressFill").style("width", "0%");
+        return;
+      }
+      dash.classed("dashboard--home", false);
+      d3.select("#dashboardHome").classed("panel-hidden", true);
       const choro = state.step >= 1 && state.step <= 3;
       const overlap = state.step === 4;
       const priority = state.step === 5;
       const coordination = state.step === 6;
-      const dash = d3.select(".dashboard");
       dash.classed("dashboard--choro", choro);
       dash.classed("dashboard--overlap", overlap);
       dash.classed("dashboard--priority", priority);
