@@ -2063,17 +2063,63 @@
     }
     .narration-progress-track {
       flex: 1;
-      height: 6px;
-      border-radius: 99px;
-      background: rgba(255, 255, 255, 0.08);
+      width: 100%;
+      min-width: 0;
+    }
+    .narration-progress-segments {
+      display: flex;
+      gap: 4px;
+      width: 100%;
+    }
+    .narration-progress-seg {
+      flex: 1 1 0;
+      min-width: 0;
+      height: 28px;
+      padding: 0 4px;
+      border: 1px solid rgba(122, 160, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #9eb4d8;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      line-height: 1;
+      cursor: pointer;
+      transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.15s ease;
+    }
+    .narration-progress-seg:hover {
+      background: rgba(59, 95, 255, 0.18);
+      border-color: rgba(160, 205, 255, 0.55);
+      color: #dbe7ff;
+    }
+    .narration-progress-seg:focus-visible {
+      outline: 2px solid rgba(160, 205, 255, 0.95);
+      outline-offset: 2px;
+    }
+    .narration-progress-seg.is-complete {
+      background: linear-gradient(180deg, rgba(47, 143, 91, 0.35), rgba(59, 95, 255, 0.28));
+      border-color: rgba(122, 160, 255, 0.42);
+      color: #d8e8ff;
+    }
+    .narration-progress-seg.is-current {
+      background: rgba(59, 95, 255, 0.32);
+      border-color: rgba(160, 205, 255, 0.85);
+      color: #fff;
+      box-shadow: 0 0 0 1px rgba(160, 205, 255, 0.25), 0 0 18px rgba(59, 95, 255, 0.35);
+    }
+    .narration-progress-seg-label {
+      display: block;
       overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     #narrationProgressFill {
-      height: 100%;
-      width: 0%;
-      border-radius: 99px;
-      background: linear-gradient(90deg, #2f8f5b, var(--brand));
-      transition: width 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      display: none;
     }
     .narration-tab-pill {
       display: inline-block;
@@ -2182,6 +2228,18 @@
         0 0 36px rgba(122, 181, 255, 0.45);
       transition: box-shadow 0.45s ease, outline-color 0.45s ease;
     }
+
+    /* Tab 6 guided analysis: keep all coordination panels lit and interactive */
+    body.narration-active.narration-coordination-explore #tourOverlay.active {
+      pointer-events: none;
+      background: rgba(2, 6, 14, 0.42);
+    }
+    body.narration-active.narration-coordination-explore .tour-highlight {
+      pointer-events: auto;
+    }
+    body.narration-active.narration-coordination-explore #tourCard.narration-panel {
+      pointer-events: auto;
+    }
     #scatterChart.narration-chart-focus {
       outline: 2px solid rgba(160, 205, 255, 0.95);
       outline-offset: 4px;
@@ -2250,6 +2308,11 @@
         align-items: stretch;
       }
       .narration-actions .narration-btn { width: 100%; justify-content: center; }
+      .narration-progress-seg {
+        height: 32px;
+        font-size: 9px;
+        padding: 0 2px;
+      }
     }
 
     .controls {
@@ -3795,12 +3858,9 @@
           <div
             id="narrationProgressTrack"
             class="narration-progress-track"
-            role="progressbar"
-            aria-valuemin="1"
-            aria-valuemax="16"
-            aria-valuenow="1"
-            aria-label="Guided analysis progress"
-          ><div id="narrationProgressFill"></div></div>
+            role="navigation"
+            aria-label="Jump to a guided analysis section"
+          ><div id="narrationProgressSegments" class="narration-progress-segments"></div><div id="narrationProgressFill" aria-hidden="true"></div></div>
         </div>
         <div class="narration-tab-pill" id="narrationTabPill">Hazard exposure</div>
         <p class="narration-focus" id="narrationFocusLabel">Current focus</p>
@@ -4669,6 +4729,12 @@
       });
     }
 
+    const NARRATION_COORD_TOUR_SELECTORS = [
+      "#coordinationLeftRail",
+      ".coordination-network-card",
+      "#coordinationSidePanel"
+    ];
+
     const NARRATION_STEPS = [
       {
         chapter: 0,
@@ -4912,9 +4978,10 @@
         keyPattern: "High-priority provinces often form clusters with peers facing a similar mix of vulnerability, capacity gap, and exposure—useful when a regional package may work better than isolated province plans.",
         whyMatters: "Disaster programmes are often delivered province by province, yet hazards, supply chains, and response systems cross boundaries. This view helps planners ask where coordination could reduce duplication or strengthen impact.",
         plannerInsight: "Click a province or cluster to explore links. Use Reset view if the network drifts after dragging nodes. Relationships are indicative—validate with local DRRM plans and official data.",
-        tourSelectors: [".coordination-network-card", "#coordinationLeftRail"],
+        tourSelectors: NARRATION_COORD_TOUR_SELECTORS,
         dashboardStep: 6,
         narrationPanelDock: "right",
+        narrationCoordExplore: true,
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -4928,10 +4995,11 @@
         keyPattern: "Provinces with comparable overall urgency and readiness stress tend to link together, even across regions.",
         whyMatters: "Use this lens first to ask which provinces might share a joint preparedness or capacity package before narrowing to a specific risk or administrative angle.",
         plannerInsight: "Click a province to open the Planning snapshot. Why linked, Shared planning issue, and Suggested planning action update for this lens.",
-        tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
+        tourSelectors: NARRATION_COORD_TOUR_SELECTORS,
         dashboardStep: 6,
         narrationCoordPlanningLens: "shared",
         narrationPanelDock: "left",
+        narrationCoordExplore: true,
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -4945,10 +5013,11 @@
         keyPattern: "Capacity-driven links often bridge provinces that need coordinated preparedness, local capacity-building, or recovery support.",
         whyMatters: "When the binding constraint is weak coping capacity, regional packages may work better than repeating the same intervention in isolation.",
         plannerInsight: "The Planning snapshot classifies capacity-gap severity (very high through lower) and suggests actions such as intensive capacity-building where gaps are largest.",
-        tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
+        tourSelectors: NARRATION_COORD_TOUR_SELECTORS,
         dashboardStep: 6,
         narrationCoordPlanningLens: "capacity",
         narrationPanelDock: "left",
+        narrationCoordExplore: true,
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -4962,10 +5031,11 @@
         keyPattern: "Provinces in the same priority band link when their urgency indices are close, supporting synchronized rollout.",
         whyMatters: "Helps planners coordinate who should move together in the same programming wave without assuming geographic adjacency.",
         plannerInsight: "Select a province to see how Why linked references its priority class and score; use this when aligning phased interventions.",
-        tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
+        tourSelectors: NARRATION_COORD_TOUR_SELECTORS,
         dashboardStep: 6,
         narrationCoordPlanningLens: "priority",
         narrationPanelDock: "left",
+        narrationCoordExplore: true,
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -4979,10 +5049,11 @@
         keyPattern: "Eastern seaboard and other exposure corridors may form distinct subgraphs; Mindanao may link on social-vulnerability patterns.",
         whyMatters: "Supports preparedness and risk-reduction coordination where the main shared concern is how poverty and hazards combine—not logistics alone.",
         plannerInsight: "Planning snapshot text describes the risk-profile type (e.g. high hazard + high vulnerability) and suggests profile-matched actions.",
-        tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
+        tourSelectors: NARRATION_COORD_TOUR_SELECTORS,
         dashboardStep: 6,
         narrationCoordPlanningLens: "risk_profile",
         narrationPanelDock: "left",
+        narrationCoordExplore: true,
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -4996,10 +5067,11 @@
         keyPattern: "Regional clusters dominate; cross-region links within an island group highlight island-wide coordination needs.",
         whyMatters: "Useful for DRRM, budgeting, and inter-LGU packages that must respect administrative boundaries even when risk profiles differ.",
         plannerInsight: "Snapshot copy explains same-region, same-island, or cross-region patterns and notes that administrative links are for implementation context only.",
-        tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
+        tourSelectors: NARRATION_COORD_TOUR_SELECTORS,
         dashboardStep: 6,
         narrationCoordPlanningLens: "admin",
         narrationPanelDock: "left",
+        narrationCoordExplore: true,
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -5027,6 +5099,73 @@
     ];
 
     const NARRATION_NARRATIVE_BEATS = NARRATION_STEPS.filter(st => !st.conclusion && !st.intro);
+
+    function buildNarrationJumps() {
+      const firstIdx = (fn) => NARRATION_STEPS.findIndex(fn);
+      return [
+        { id: "intro", label: "Introduction", shortLabel: "Start", stepIdx: firstIdx(s => s.intro) },
+        { id: "tab1", label: "Tab 1 · Hazard exposure", shortLabel: "1", stepIdx: firstIdx(s => s.dashboardStep === 1) },
+        { id: "tab2", label: "Tab 2 · Coping capacity", shortLabel: "2", stepIdx: firstIdx(s => s.dashboardStep === 2) },
+        { id: "tab3", label: "Tab 3 · Poverty", shortLabel: "3", stepIdx: firstIdx(s => s.dashboardStep === 3) },
+        { id: "tab4", label: "Tab 4 · Overlap", shortLabel: "4", stepIdx: firstIdx(s => s.dashboardStep === 4) },
+        { id: "tab5", label: "Tab 5 · Priority", shortLabel: "5", stepIdx: firstIdx(s => s.dashboardStep === 5) },
+        { id: "tab6", label: "Tab 6 · Coordination", shortLabel: "6", stepIdx: firstIdx(s => s.dashboardStep === 6) },
+        { id: "final", label: "Final interpretation", shortLabel: "End", stepIdx: firstIdx(s => s.conclusion) }
+      ].filter(j => j.stepIdx >= 0);
+    }
+
+    const NARRATION_JUMPS = buildNarrationJumps();
+
+    function narrationSectionForStepIdx(idx) {
+      let section = 0;
+      NARRATION_JUMPS.forEach((jump, i) => {
+        if (idx >= jump.stepIdx) section = i;
+      });
+      return section;
+    }
+
+    function initNarrationProgressNav() {
+      const container = document.getElementById("narrationProgressSegments");
+      if (!container || container.childElementCount) return;
+      NARRATION_JUMPS.forEach((jump) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "narration-progress-seg";
+        btn.dataset.stepIdx = String(jump.stepIdx);
+        btn.title = jump.label;
+        btn.setAttribute("aria-label", `Go to ${jump.label}`);
+        btn.innerHTML = `<span class="narration-progress-seg-label">${jump.shortLabel}</span>`;
+        container.appendChild(btn);
+      });
+      container.addEventListener("click", (e) => {
+        const btn = e.target.closest(".narration-progress-seg");
+        if (!btn || !state._narrationActive) return;
+        const idx = Number(btn.dataset.stepIdx);
+        if (!Number.isFinite(idx) || idx === state._narrationIdx) return;
+        showNarrationStep(idx);
+      });
+    }
+
+    function renderNarrationProgressNav(currentIdx) {
+      const container = document.getElementById("narrationProgressSegments");
+      const track = document.getElementById("narrationProgressTrack");
+      if (!container) return;
+      const currentSection = narrationSectionForStepIdx(currentIdx);
+      container.querySelectorAll(".narration-progress-seg").forEach((btn, i) => {
+        btn.classList.toggle("is-current", i === currentSection);
+        btn.classList.toggle("is-complete", i < currentSection);
+        btn.setAttribute("aria-current", i === currentSection ? "step" : "false");
+      });
+      if (track) {
+        const jump = NARRATION_JUMPS[currentSection];
+        track.setAttribute(
+          "aria-label",
+          jump
+            ? `Jump to a guided analysis section · currently ${jump.label}`
+            : "Jump to a guided analysis section"
+        );
+      }
+    }
 
     function applyNarrationCompareSettings(s, rowsForCompare) {
       if (!Array.isArray(rowsForCompare) || !rowsForCompare.length) return false;
@@ -5217,9 +5356,12 @@
       document.addEventListener("keydown", (e) => {
         if (!state._narrationActive) return;
         if (e.key === "Escape") endGuidedNarration(false);
+        if (e.target instanceof Element && e.target.closest(".narration-progress-seg")) return;
         if (e.key === "ArrowRight" || e.key === "Enter") narrationNav(+1);
         if (e.key === "ArrowLeft") narrationNav(-1);
       });
+
+      initNarrationProgressNav();
 
       window.addEventListener("resize", () => {
         if (state._narrationActive) positionNarrationPanel();
@@ -5284,6 +5426,7 @@
         card.setAttribute("aria-label", "Guided analysis narration");
       }
       document.body.classList.remove("narration-active");
+      document.body.classList.remove("narration-coordination-explore");
       if (markDone) {
         try { window.localStorage.setItem("dashboard_guidance_completed", "1"); } catch {}
       }
@@ -5440,26 +5583,17 @@
         s.conclusion ? "Final Interpretation" : (s.intro ? "Guided analysis introduction" : "Guided analysis narration")
       );
 
-      const total = steps.length;
-      const pct = ((idx + 1) / total) * 100;
-      if (prog) prog.style.width = `${pct}%`;
+      renderNarrationProgressNav(idx);
 
-      if (progTrack) {
-        progTrack.setAttribute("aria-valuemin", "1");
-        progTrack.setAttribute("aria-valuemax", String(total));
-        progTrack.setAttribute("aria-valuenow", String(idx + 1));
-        if (s.conclusion) {
-          progTrack.setAttribute("aria-label", "Guided analysis: final interpretation");
-        } else if (s.intro) {
-          progTrack.setAttribute("aria-label", "Guided analysis: introduction");
-        } else {
-          const beat = NARRATION_NARRATIVE_BEATS.indexOf(s) + 1;
-          progTrack.setAttribute(
-            "aria-label",
-            `Guided analysis progress: ${beat} of ${NARRATION_NARRATIVE_BEATS.length}${s.tabPill ? ` · ${s.tabPill}` : ""}`
-          );
+      if (progTrack && !s.conclusion && !s.intro) {
+        const beat = NARRATION_NARRATIVE_BEATS.indexOf(s) + 1;
+        if (beat > 0) {
+          progTrack.setAttribute("aria-description", `Step ${beat} of ${NARRATION_NARRATIVE_BEATS.length}${s.tabPill ? ` · ${s.tabPill}` : ""}`);
         }
+      } else if (progTrack) {
+        progTrack.removeAttribute("aria-description");
       }
+      if (prog) prog.style.width = `${((idx + 1) / steps.length) * 100}%`;
 
       pill.textContent = s.tabPill || (s.conclusion ? "Final Interpretation" : "");
       focusEl.textContent = s.conclusion || s.intro ? "" : (s.focus || "");
@@ -5507,19 +5641,27 @@
 
       clearTourHighlight();
       d3.select("#scatterChart").classed("narration-chart-focus", Boolean(s.highlightScatter));
+      const coordExplore = Boolean(s.narrationCoordExplore) || Number(s.dashboardStep) === 6;
+      document.body.classList.toggle(
+        "narration-coordination-explore",
+        coordExplore && !s.conclusion && !s.intro
+      );
       const tourSels = Array.isArray(s.tourSelectors) && s.tourSelectors.length
         ? s.tourSelectors
         : (s.selector ? [s.selector] : []);
       for (const sel of tourSels) {
         const el = document.querySelector(sel);
-        if (!el) continue;
-        el.classList.add("tour-highlight");
-        try {
-          el.scrollIntoView({ behavior: "auto", block: "nearest", inline: "nearest" });
-        } catch {
-          el.scrollIntoView();
+        if (el) el.classList.add("tour-highlight");
+      }
+      if (!coordExplore && tourSels.length) {
+        const scrollTarget = document.querySelector(tourSels[0]);
+        if (scrollTarget) {
+          try {
+            scrollTarget.scrollIntoView({ behavior: "auto", block: "nearest", inline: "nearest" });
+          } catch {
+            scrollTarget.scrollIntoView();
+          }
         }
-        break;
       }
 
       if (scroll) {
