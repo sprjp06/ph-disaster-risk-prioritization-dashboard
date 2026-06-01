@@ -1961,6 +1961,11 @@
       transform-origin: 0% 0%;
     }
 
+    /* Tab 6 coordination: dock panel on the right when left rail / network should stay visible */
+    #tourCard.narration-panel.narration-panel--dock-right {
+      transform-origin: 100% 0%;
+    }
+
     /* Conclusion: simplified header on all viewports (keep progress bar only) */
     #tourCard.narration-panel.narration-panel--conclusion-layout .narration-tab-pill,
     #tourCard.narration-panel.narration-panel--conclusion-layout .narration-focus {
@@ -4909,6 +4914,7 @@
         plannerInsight: "Click a province or cluster to explore links. Use Reset view if the network drifts after dragging nodes. Relationships are indicative—validate with local DRRM plans and official data.",
         tourSelectors: [".coordination-network-card", "#coordinationLeftRail"],
         dashboardStep: 6,
+        narrationPanelDock: "right",
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -4925,6 +4931,7 @@
         tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
         dashboardStep: 6,
         narrationCoordPlanningLens: "shared",
+        narrationPanelDock: "left",
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -4941,6 +4948,7 @@
         tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
         dashboardStep: 6,
         narrationCoordPlanningLens: "capacity",
+        narrationPanelDock: "left",
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -4957,6 +4965,7 @@
         tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
         dashboardStep: 6,
         narrationCoordPlanningLens: "priority",
+        narrationPanelDock: "left",
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -4973,6 +4982,7 @@
         tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
         dashboardStep: 6,
         narrationCoordPlanningLens: "risk_profile",
+        narrationPanelDock: "left",
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -4989,6 +4999,7 @@
         tourSelectors: [".coordination-network-card", "#coordinationSidePanel"],
         dashboardStep: 6,
         narrationCoordPlanningLens: "admin",
+        narrationPanelDock: "left",
         mapAccent: "reset",
         highlightScatter: false
       },
@@ -5014,6 +5025,56 @@
         conclusion: true
       }
     ];
+
+    const NARRATION_NARRATIVE_BEATS = NARRATION_STEPS.filter(st => !st.conclusion && !st.intro);
+
+    function applyNarrationCompareSettings(s, rowsForCompare) {
+      if (!Array.isArray(rowsForCompare) || !rowsForCompare.length) return false;
+      const target = s.narrationCompare && s.narrationCompare.level
+        ? {
+            level: s.narrationCompare.level,
+            a: s.narrationCompare.a != null ? s.narrationCompare.a : "",
+            b: s.narrationCompare.b != null ? s.narrationCompare.b : ""
+          }
+        : { level: "Region", a: "", b: "" };
+      const changed =
+        state.compareLevel !== target.level ||
+        state.compareA !== target.a ||
+        state.compareB !== target.b;
+      if (!changed) return false;
+      state.compareLevel = target.level;
+      state.compareA = target.a;
+      state.compareB = target.b;
+      d3.selectAll('input[name="compareLevel"]').property("checked", function () {
+        return this.value === state.compareLevel;
+      });
+      updateComparisonDropdowns(rowsForCompare);
+      d3.select("#compareA").property("value", state.compareA);
+      d3.select("#compareB").property("value", state.compareB);
+      updateCompareLabels();
+      return true;
+    }
+
+    function syncCoordPlanningLensUI(lens, resetZoom) {
+      const valid = ["shared", "capacity", "priority", "risk_profile", "admin"];
+      if (!valid.includes(lens)) return false;
+      const changed = state.coordPlanningLens !== lens;
+      state.coordPlanningLens = lens;
+      const sel = document.getElementById("coordPlanningLens");
+      if (sel) sel.value = lens;
+      if (typeof updateCoordPlanningLensHelper === "function") updateCoordPlanningLensHelper();
+      if (changed && resetZoom !== false) state.coordNetworkZoomTransform = null;
+      return changed;
+    }
+
+    function scheduleNarrationRender(fn) {
+      state._narrationRenderGen = (state._narrationRenderGen || 0) + 1;
+      const gen = state._narrationRenderGen;
+      window.requestAnimationFrame(() => {
+        if (gen !== state._narrationRenderGen || !state._narrationActive) return;
+        fn();
+      });
+    }
 
     function dismissGuidedCtaHint() {
       const wrap = document.getElementById("guidedCtaWrap");
@@ -5058,15 +5119,18 @@
         (Boolean(cur.highlightScatter) ||
           (Array.isArray(cur.tourSelectors) && cur.tourSelectors.length > 1) ||
           Boolean(cur.narrationPriorityTier));
-      const coordinationWideStep =
+      const coordinationStep =
         !mobile &&
         cur &&
         !cur.conclusion &&
         !cur.intro &&
         Number(cur.dashboardStep) === 6;
+      const coordinationDockLeft = coordinationStep && cur.narrationPanelDock === "left";
+      const coordinationDockRight = coordinationStep && cur.narrationPanelDock === "right";
 
       card.classList.toggle("narration-panel--mobile", mobile);
-      card.classList.toggle("narration-panel--dock-left", overlapStep || priorityWideStep || coordinationWideStep);
+      card.classList.toggle("narration-panel--dock-left", overlapStep || priorityWideStep || coordinationDockLeft);
+      card.classList.toggle("narration-panel--dock-right", coordinationDockRight);
       card.classList.toggle("narration-panel--conclusion-layout", centerModalStep);
       card.classList.toggle("narration-panel--center-conclusion", centerModalStep && !mobile);
 
@@ -5085,13 +5149,24 @@
         card.style.width = "";
         card.style.maxHeight = "";
         card.style.transform = "";
-      } else if (overlapStep || priorityWideStep || coordinationWideStep) {
+      } else if (overlapStep || priorityWideStep || coordinationDockLeft) {
         const topY = Math.max(76, Math.round(window.innerHeight * 0.06));
-        const reserveScatter = coordinationWideStep ? 520 : 420;
+        const reserveScatter = coordinationDockLeft ? 520 : 420;
         const gutter = 40;
         const maxW = Math.min(460, Math.max(300, window.innerWidth - reserveScatter - gutter));
         card.style.left = "20px";
         card.style.right = "auto";
+        card.style.top = `${topY}px`;
+        card.style.bottom = "auto";
+        card.style.width = `${maxW}px`;
+        card.style.maxHeight = "min(78vh, 720px)";
+      } else if (coordinationDockRight) {
+        const topY = Math.max(76, Math.round(window.innerHeight * 0.06));
+        const reserveLeft = 520;
+        const gutter = 40;
+        const maxW = Math.min(460, Math.max(300, window.innerWidth - reserveLeft - gutter));
+        card.style.left = "auto";
+        card.style.right = "20px";
         card.style.top = `${topY}px`;
         card.style.bottom = "auto";
         card.style.width = `${maxW}px`;
@@ -5112,14 +5187,16 @@
       const zoom = state._mapZoomBehavior;
       if (!svg.node() || !zoom) return;
       const t = cfg.mapAccent;
+      const delay = 0;
+      const duration = t === "subtle_in" ? 450 : 220;
       window.setTimeout(() => {
         if (!state._narrationActive) return;
         if (t === "subtle_in") {
-          svg.transition().duration(900).ease(d3.easeCubicOut).call(zoom.transform, d3.zoomIdentity.translate(0, 22).scale(1.07));
+          svg.transition().duration(duration).ease(d3.easeCubicOut).call(zoom.transform, d3.zoomIdentity.translate(0, 22).scale(1.07));
         } else if (t === "reset" || t === "country_frame") {
-          svg.transition().duration(700).ease(d3.easeCubicOut).call(zoom.transform, d3.zoomIdentity);
+          svg.transition().duration(duration).ease(d3.easeCubicOut).call(zoom.transform, d3.zoomIdentity);
         }
-      }, 420);
+      }, delay);
     }
 
     function initGuidedTour() {
@@ -5164,7 +5241,24 @@
       });
     }
 
-    function endGuidedNarration(markDone) {
+    function resetDashboardToHazardTab() {
+      state.step = 1;
+      state.prioritySelectedTier = "highest";
+      state.coordSelectedProvince = null;
+      state.coordSelectedClusterKey = null;
+      state.coordPlanningLens = "shared";
+      state.coordNetworkZoomTransform = null;
+      state.selectedProvince = null;
+      state.mapZoomTransform = null;
+      const coordLensSel = document.getElementById("coordPlanningLens");
+      if (coordLensSel) coordLensSel.value = "shared";
+      d3.selectAll("#stepTabs .step-tab").classed("active", false);
+      d3.select('#stepTabs .step-tab[data-step="1"]').classed("active", true);
+      d3.select("#provinceCard").style("display", "none");
+      renderQuadrantLegend();
+    }
+
+    function endGuidedNarration(markDone, opts = {}) {
       state._narrationActive = false;
       state._narrationMapHighlightKeys = null;
       state._narrationIslandCapacityCallouts = null;
@@ -5186,13 +5280,14 @@
       }
       if (card) {
         card.style.display = "none";
-        card.classList.remove("narration-panel--mobile", "narration-panel--dock-left", "narration-panel--center-conclusion", "narration-panel--conclusion-layout");
+        card.classList.remove("narration-panel--mobile", "narration-panel--dock-left", "narration-panel--dock-right", "narration-panel--center-conclusion", "narration-panel--conclusion-layout");
         card.setAttribute("aria-label", "Guided analysis narration");
       }
       document.body.classList.remove("narration-active");
       if (markDone) {
         try { window.localStorage.setItem("dashboard_guidance_completed", "1"); } catch {}
       }
+      if (opts.resetToStart) resetDashboardToHazardTab();
       const r = state._rowsForRedraw || state._latestFiltered || [];
       if (r.length) {
         updateComparisonDropdowns(r);
@@ -5209,7 +5304,7 @@
       const steps = state._narrationSteps || [];
       const next = Math.max(0, Math.min(steps.length - 1, (state._narrationIdx || 0) + delta));
       if (next === (state._narrationIdx || 0) && delta > 0) {
-        endGuidedNarration(true);
+        endGuidedNarration(true, { resetToStart: true });
         return;
       }
       showNarrationStep(next);
@@ -5220,55 +5315,59 @@
     }
 
     function applyCoordPlanningLensForTour(lens, opts = {}) {
-      const valid = ["shared", "capacity", "priority", "risk_profile", "admin"];
-      if (!valid.includes(lens)) return;
-      const changed = state.coordPlanningLens !== lens;
-      state.coordPlanningLens = lens;
-      const sel = document.getElementById("coordPlanningLens");
-      if (sel) sel.value = lens;
-      if (typeof updateCoordPlanningLensHelper === "function") updateCoordPlanningLensHelper();
-      if (changed && opts.resetZoom !== false) state.coordNetworkZoomTransform = null;
-      if (state.step === 6) {
+      syncCoordPlanningLensUI(lens, opts.resetZoom !== false);
+      if (state.step === 6 && state._latestClassified) {
         const r = state._rowsForRedraw || state._latestFiltered || [];
-        const tracks = state._tracksForRedraw;
-        const provinces = state._provincesForRedraw;
-        if (r.length && provinces) renderAll(r, tracks, provinces);
+        if (r.length) {
+          renderAll(r, state._tracksForRedraw, state._provincesForRedraw, { mode: "coordLens" });
+        }
       }
     }
 
     function goToStepForTour(step, opts = {}) {
       if (!Number.isFinite(step)) return;
-      const force = opts.force === true;
-      const lensOnlyUpdate = step === 6
-        && opts.coordPlanningLens
-        && state.step === 6
-        && !opts.priorityTier;
-      if (state.step === step && !force && !lensOnlyUpdate) return;
-      const stepChanged = state.step !== step;
+      const prevStep = state.step;
+      const stepChanged = prevStep !== step;
+      const nextTier = step === 5 && opts.priorityTier && PRIORITY_TIER_ORDER.includes(opts.priorityTier)
+        ? opts.priorityTier
+        : (step === 5 ? state.prioritySelectedTier : null);
+      const nextLens = step === 6 && opts.coordPlanningLens
+        ? opts.coordPlanningLens
+        : (step === 6 ? (state.coordPlanningLens || "shared") : null);
+      const priorityTierChanged = step === 5 && prevStep === 5 && nextTier && nextTier !== state.prioritySelectedTier;
+      const lensOnlyUpdate = step === 6 && prevStep === 6 && nextLens && nextLens !== state.coordPlanningLens;
+      const mapOverlayOnly = Boolean(opts.narrationMapOverlay) && !stepChanged && !priorityTierChanged && !lensOnlyUpdate;
+
+      if (!stepChanged && !priorityTierChanged && !lensOnlyUpdate && !mapOverlayOnly && !opts.force) return;
+
       if (stepChanged) {
         state.step = step;
         d3.selectAll("#stepTabs .step-tab").classed("active", false);
         d3.select(`#stepTabs .step-tab[data-step="${step}"]`).classed("active", true);
         renderQuadrantLegend();
       }
-      if (step === 5) {
-        const pt = opts.priorityTier;
-        if (pt && PRIORITY_TIER_ORDER.includes(pt)) state.prioritySelectedTier = pt;
-        else state.prioritySelectedTier = "highest";
+      if (step === 5 && nextTier) {
+        state.prioritySelectedTier = nextTier;
       }
       if (step === 6) {
-        state.coordSelectedProvince = null;
-        state.coordSelectedClusterKey = null;
-        if (opts.coordPlanningLens) {
-          state.coordPlanningLens = opts.coordPlanningLens;
-        } else if (!state.coordPlanningLens) {
-          state.coordPlanningLens = "shared";
+        if (stepChanged || lensOnlyUpdate) {
+          state.coordSelectedProvince = null;
+          state.coordSelectedClusterKey = null;
         }
+        if (nextLens) syncCoordPlanningLensUI(nextLens, opts.resetCoordZoom !== false);
       }
+
       const r = state._rowsForRedraw || state._latestFiltered || [];
-      renderAll(r, state._tracksForRedraw, state._provincesForRedraw);
-      if (step === 6 && opts.coordPlanningLens) {
-        applyCoordPlanningLensForTour(opts.coordPlanningLens, { resetZoom: opts.resetCoordZoom !== false });
+      const tracks = state._tracksForRedraw;
+      const provinces = state._provincesForRedraw;
+      if (!r.length) return;
+
+      if (lensOnlyUpdate) {
+        renderAll(r, tracks, provinces, { mode: "coordLens" });
+      } else if (mapOverlayOnly) {
+        renderAll(r, tracks, provinces, { mode: "mapOnly" });
+      } else {
+        renderAll(r, tracks, provinces);
       }
     }
 
@@ -5278,6 +5377,10 @@
       if (!s) return endGuidedNarration(false);
       state._narrationIdx = idx;
 
+      const rowsForCompare = state._rowsForRedraw || state._latestFiltered;
+      applyNarrationCompareSettings(s, rowsForCompare);
+
+      const hadFullScatter = state._narrationPriorityFullScatter;
       state._narrationMapHighlightKeys = null;
       if (Array.isArray(s.mapHighlightKeys) && s.mapHighlightKeys.length) {
         state._narrationMapHighlightKeys = new Set(
@@ -5286,35 +5389,9 @@
       }
       state._narrationPovertyCorridorMap = Boolean(s.narrationPovertyCorridorMap);
       state._narrationPriorityFullScatter = Boolean(s.narrationPriorityFullScatter);
+      const scatterModeChanged = hadFullScatter !== state._narrationPriorityFullScatter;
 
       state._narrationIslandCapacityCallouts = null;
-      const rowsForCompare = state._rowsForRedraw || state._latestFiltered;
-      if (Array.isArray(rowsForCompare) && rowsForCompare.length) {
-        if (s.narrationCompare && s.narrationCompare.level) {
-          state.compareLevel = s.narrationCompare.level;
-          state.compareA = s.narrationCompare.a != null ? s.narrationCompare.a : "";
-          state.compareB = s.narrationCompare.b != null ? s.narrationCompare.b : "";
-          d3.selectAll('input[name="compareLevel"]').property("checked", function () {
-            return this.value === state.compareLevel;
-          });
-          updateComparisonDropdowns(rowsForCompare);
-          d3.select("#compareA").property("value", state.compareA);
-          d3.select("#compareB").property("value", state.compareB);
-          updateCompareLabels();
-        } else {
-          state.compareLevel = "Region";
-          state.compareA = "";
-          state.compareB = "";
-          d3.selectAll('input[name="compareLevel"]').property("checked", function () {
-            return this.value === "Region";
-          });
-          updateComparisonDropdowns(rowsForCompare);
-          d3.select("#compareA").property("value", "");
-          d3.select("#compareB").property("value", "");
-          updateCompareLabels();
-        }
-      }
-
       if (s.narrationIslandCapacityCallouts && Array.isArray(rowsForCompare) && rowsForCompare.length) {
         const gmean = (isl) => {
           const sub = rowsForCompare.filter(d => d.islandGroup === isl);
@@ -5330,7 +5407,9 @@
         };
       }
 
+      let bivarTabChanged = false;
       if (s.narrationBivariateTab === "poverty_hazard" || s.narrationBivariateTab === "poverty_capacity") {
+        bivarTabChanged = state.tab !== s.narrationBivariateTab;
         state.tab = s.narrationBivariateTab;
         syncMetricTabsUI();
       }
@@ -5339,20 +5418,8 @@
         state.mapZoomTransform = d3.zoomIdentity;
       }
 
-      if (Number.isFinite(s.dashboardStep)) {
-        goToStepForTour(s.dashboardStep, {
-          force: true,
-          priorityTier: s.narrationPriorityTier,
-          coordPlanningLens: s.narrationCoordPlanningLens,
-          resetCoordZoom: Boolean(s.narrationCoordPlanningLens)
-        });
-      } else if (s.narrationCoordPlanningLens) {
-        applyCoordPlanningLensForTour(s.narrationCoordPlanningLens);
-      }
-
       const overlay = document.getElementById("tourOverlay");
       const card = document.getElementById("tourCard");
-      const badge = document.getElementById("narrationStepBadge");
       const pill = document.getElementById("narrationTabPill");
       const focusEl = document.getElementById("narrationFocusLabel");
       const titleEl = document.getElementById("narrationTitle");
@@ -5377,7 +5444,6 @@
       const pct = ((idx + 1) / total) * 100;
       if (prog) prog.style.width = `${pct}%`;
 
-      const narrativeBeats = steps.filter(st => !st.conclusion && !st.intro);
       if (progTrack) {
         progTrack.setAttribute("aria-valuemin", "1");
         progTrack.setAttribute("aria-valuemax", String(total));
@@ -5387,10 +5453,10 @@
         } else if (s.intro) {
           progTrack.setAttribute("aria-label", "Guided analysis: introduction");
         } else {
-          const beat = narrativeBeats.indexOf(s) + 1;
+          const beat = NARRATION_NARRATIVE_BEATS.indexOf(s) + 1;
           progTrack.setAttribute(
             "aria-label",
-            `Guided analysis progress: ${beat} of ${narrativeBeats.length}${s.tabPill ? ` · ${s.tabPill}` : ""}`
+            `Guided analysis progress: ${beat} of ${NARRATION_NARRATIVE_BEATS.length}${s.tabPill ? ` · ${s.tabPill}` : ""}`
           );
         }
       }
@@ -5444,43 +5510,42 @@
       const tourSels = Array.isArray(s.tourSelectors) && s.tourSelectors.length
         ? s.tourSelectors
         : (s.selector ? [s.selector] : []);
-      let scrolledTour = false;
       for (const sel of tourSels) {
         const el = document.querySelector(sel);
         if (!el) continue;
         el.classList.add("tour-highlight");
-        if (!scrolledTour) {
-          scrolledTour = true;
-          try {
-            el.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "nearest" });
-          } catch {
-            el.scrollIntoView();
-          }
+        try {
+          el.scrollIntoView({ behavior: "auto", block: "nearest", inline: "nearest" });
+        } catch {
+          el.scrollIntoView();
         }
+        break;
       }
 
       if (scroll) {
-        scroll.style.opacity = "0.65";
         scroll.scrollTop = 0;
-        window.requestAnimationFrame(() => {
-          scroll.style.transition = "opacity 0.35s ease";
-          scroll.style.opacity = "1";
-        });
       }
 
       positionNarrationPanel();
-      narrationApplyMapAccent(s);
 
-      if ((Array.isArray(s.mapHighlightKeys) && s.mapHighlightKeys.length) || s.narrationIslandCapacityCallouts) {
-        const rMap = state._rowsForRedraw || state._latestFiltered || [];
-        const pMap = state._provincesForRedraw;
-        if (rMap && rMap.length && pMap) {
-          requestAnimationFrame(() => {
-            if (!state._narrationActive) return;
-            renderAll(rMap, state._tracksForRedraw, pMap);
+      const mapOverlayStep = Number.isFinite(s.dashboardStep) && s.dashboardStep >= 1 && s.dashboardStep <= 3;
+      const narrationMapOverlay = mapOverlayStep && state.step === s.dashboardStep;
+      const forceDashboardRefresh = bivarTabChanged || scatterModeChanged;
+
+      scheduleNarrationRender(() => {
+        if (Number.isFinite(s.dashboardStep)) {
+          goToStepForTour(s.dashboardStep, {
+            force: forceDashboardRefresh,
+            priorityTier: s.narrationPriorityTier,
+            coordPlanningLens: s.narrationCoordPlanningLens,
+            resetCoordZoom: Boolean(s.narrationCoordPlanningLens),
+            narrationMapOverlay
           });
+        } else if (s.narrationCoordPlanningLens) {
+          applyCoordPlanningLensForTour(s.narrationCoordPlanningLens);
         }
-      }
+        narrationApplyMapAccent(s);
+      });
     }
 
     function initMapZoomControls() {
@@ -5832,7 +5897,8 @@
       });
     }
 
-    function renderAll(rows, tracks, provinces) {
+    function renderAll(rows, tracks, provinces, opts = {}) {
+      const mode = opts.mode || "full";
       if (state._priorDashboardStep === 5 && state.step !== 5) state.hoveredProvince = null;
       if (state._priorDashboardStep === 6 && state.step !== 6) {
         state.coordSelectedProvince = null;
@@ -5862,6 +5928,25 @@
       if (state.step === 5 || state.step === 6) classified = assignPriorityTiers(classified);
       state._latestFiltered = filtered;
       state._latestClassified = classified;
+
+      if (mode === "coordLens") {
+        renderCoordinationLensUpdate(classified);
+        state._priorDashboardStep = state.step;
+        return;
+      }
+
+      if (mode === "mapOnly") {
+        if (state.step !== 6) {
+          renderMap(allDerived, filtered, classified, tracks, provinces, rows, tracks, provinces);
+        }
+        renderComparison(rows);
+        if (state.step !== 6) {
+          renderKpis(classified, filtered);
+          renderInsights(classified, filtered);
+        }
+        state._priorDashboardStep = state.step;
+        return;
+      }
 
       updateStepChrome();
       updateRightPanels();
@@ -8824,6 +8909,15 @@
       const height = 680;
       svg.attr("viewBox", `0 0 ${width} ${height}`);
 
+      const priorPos = new Map();
+      if (Array.isArray(state._coordGraphNodes)) {
+        state._coordGraphNodes.forEach(n => {
+          if (n.id != null && Number.isFinite(n.x) && Number.isFinite(n.y)) {
+            priorPos.set(n.id, { x: n.x, y: n.y });
+          }
+        });
+      }
+
       if (state._coordSimulation) {
         state._coordSimulation.stop();
         state._coordSimulation = null;
@@ -8839,6 +8933,13 @@
         if (!nodesById.has(n.id)) nodesById.set(n.id, n);
       });
       const simNodes = [...nodesById.values()];
+      simNodes.forEach(n => {
+        const p = priorPos.get(n.id);
+        if (p) {
+          n.x = p.x;
+          n.y = p.y;
+        }
+      });
       const linkIdMap = nodesById;
       const simLinks = links.map(l => ({
         source: typeof l.source === "object" ? l.source : linkIdMap.get(l.source),
@@ -8955,6 +9056,8 @@
         .force("charge", d3.forceManyBody().strength(-140))
         .force("center", d3.forceCenter(width / 2, height / 2))
         .force("collide", d3.forceCollide().radius(d => rScale(d.priority_vuln_gap) + 4))
+        .alpha(priorPos.size ? 0.45 : 1)
+        .alphaDecay(state._narrationActive ? 0.12 : 0.0228)
         .on("tick", () => {
           linkSel
             .attr("x1", d => d.source.x)
@@ -8993,6 +9096,13 @@
       state._coordGraphLinks = links;
       renderCoordinationLegend();
       renderCoordinationNetworkGraph(nodes, links);
+    }
+
+    function renderCoordinationLensUpdate(classified) {
+      if (state.step !== 6) return;
+      updateCoordPlanningLensHelper();
+      renderCoordinationSummary(classified);
+      renderCoordinationNetwork(classified);
     }
 
     function renderCoordinationTab6(classified) {
