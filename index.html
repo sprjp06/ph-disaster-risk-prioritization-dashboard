@@ -613,26 +613,6 @@
       text-transform: none;
     }
 
-    .coord-filter-list .check-row.is-disabled {
-      opacity: 0.45;
-      pointer-events: none;
-    }
-
-    .coord-filter-presets {
-      padding-bottom: 8px;
-      margin-bottom: 4px;
-      border-bottom: 1px solid rgba(35, 50, 72, 0.65);
-    }
-
-    .coord-filter-tiers-label {
-      margin: 10px 0 6px;
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      color: #8ea6c7;
-      text-transform: none;
-    }
-
     .map-priority-lead {
       margin: 4px 0 0;
       font-size: 13px;
@@ -3974,10 +3954,28 @@
       </article>
     </aside>
 
-    <aside id="coordinationLeftRail" class="coordination-left-rail card panel-hidden" aria-label="Cluster ranking and coordination insights">
+    <aside id="coordinationLeftRail" class="coordination-left-rail card panel-hidden" aria-label="Network arrangement, priority cluster list, and coordination insights">
+      <article class="coordination-left-card card coord-arrange-card">
+        <h3>Arrange network by</h3>
+        <p class="coordination-left-sub coordination-arrange-hint">Groups the ranked list below (map layout stays force-directed).</p>
+        <div class="coord-arrange-options" style="display:grid; gap:8px;">
+          <label class="check-row" style="margin:0;">
+            <input type="radio" name="coordNodeGroup" value="region" checked />
+            Region
+          </label>
+          <label class="check-row" style="margin:0;">
+            <input type="radio" name="coordNodeGroup" value="island" />
+            Island group
+          </label>
+          <label class="check-row" style="margin:0;">
+            <input type="radio" name="coordNodeGroup" value="priority" />
+            Priority class
+          </label>
+        </div>
+      </article>
       <article class="coordination-left-card card">
-        <h3>Cluster Ranking — Coordination Need</h3>
-        <p class="coordination-left-sub">Clusters grouped by region. Any priority level can be planned together—urgency differs, but links still matter for regional coordination.</p>
+        <h3>Priority cluster list</h3>
+        <p class="coordination-left-sub">Grouped by the selected network arrangement. Ranked by priority-province count and average priority score.</p>
         <div id="coordClusterRankPanel"></div>
       </article>
       <article class="coordination-left-card card">
@@ -4139,56 +4137,11 @@
         </div>
         <div class="control-group">
           <span class="label">Filter provinces</span>
-          <p class="coord-panel-hint">Select one or more priority levels (e.g. Highest + High). Every level can form coordination clusters.</p>
+          <p class="coord-panel-hint">Optionally focus on the highest-scoring provinces. Use Arrange network by on the left to group the priority cluster list.</p>
           <div class="coord-filter-list" style="display:grid; gap:8px; margin-top:6px;">
-            <div class="coord-filter-presets" style="display:grid; gap:8px;">
-              <label class="check-row" style="margin:0;">
-                <input type="checkbox" id="coordFilterAll" checked />
-                All provinces
-              </label>
-              <label class="check-row" style="margin:0;">
-                <input type="checkbox" id="coordFilterTop20" />
-                Also limit to top 20% by priority score
-              </label>
-            </div>
-            <p class="coord-filter-tiers-label">By priority class (select one or more)</p>
-            <label class="check-row coord-tier-row" style="margin:0;">
-              <input type="checkbox" class="coord-tier-check" value="highest" />
-              Highest priority
-            </label>
-            <label class="check-row coord-tier-row" style="margin:0;">
-              <input type="checkbox" class="coord-tier-check" value="high" />
-              High priority
-            </label>
-            <label class="check-row coord-tier-row" style="margin:0;">
-              <input type="checkbox" class="coord-tier-check" value="moderate" />
-              Moderate priority
-            </label>
-            <label class="check-row coord-tier-row" style="margin:0;">
-              <input type="checkbox" class="coord-tier-check" value="lower" />
-              Lower priority
-            </label>
-            <label class="check-row coord-tier-row" style="margin:0;">
-              <input type="checkbox" class="coord-tier-check" value="lowest" />
-              Lowest priority
-            </label>
-          </div>
-        </div>
-        <div class="control-group" style="border-bottom:0; margin-bottom:0; padding-bottom:0;">
-          <span class="label">Arrange network by</span>
-          <p class="coord-panel-hint">Groups the ranked list on the left (map layout stays force-directed).</p>
-          <div style="display:grid; gap:8px; margin-top:6px;">
             <label class="check-row" style="margin:0;">
-              <input type="radio" name="coordNodeGroup" value="region" checked />
-              Region
-            </label>
-            <label class="check-row" style="margin:0;">
-              <input type="radio" name="coordNodeGroup" value="island" />
-              Island group
-            </label>
-            <label class="check-row" style="margin:0;">
-              <input type="radio" name="coordNodeGroup" value="priority" />
-              Priority class
+              <input type="checkbox" id="coordFilterTop20" />
+              Limit to top 20% by priority score
             </label>
           </div>
         </div>
@@ -4349,9 +4302,7 @@
       _narrationPriorityFullScatter: false,
       coordPlanningLens: "shared",
       coordNodeGroup: "region",
-      coordFilterAll: true,
       coordFilterTop20: false,
-      coordFilterTiers: new Set(),
       coordSelectedProvince: null,
       coordSelectedClusterKey: null,
       coordNetworkZoomTransform: null,
@@ -9090,12 +9041,6 @@
       const valid = classified.filter(d => Number.isFinite(d.priority_vuln_gap));
       let rows = valid;
 
-      if (!state.coordFilterAll) {
-        const tiers = state.coordFilterTiers;
-        if (!tiers || tiers.size === 0) return [];
-        rows = rows.filter(d => tiers.has(d.priorityTier));
-      }
-
       if (state.coordFilterTop20) {
         const sorted = [...rows].sort((a, b) => b.priority_vuln_gap - a.priority_vuln_gap);
         const n = Math.max(1, Math.ceil(0.2 * sorted.length));
@@ -9106,15 +9051,7 @@
     }
 
     function syncCoordFilterControlsUI() {
-      const allOn = Boolean(state.coordFilterAll);
-      d3.select("#coordFilterAll").property("checked", allOn);
       d3.select("#coordFilterTop20").property("checked", Boolean(state.coordFilterTop20));
-      d3.selectAll(".coord-tier-check").each(function () {
-        const tier = this.value;
-        const on = state.coordFilterTiers && state.coordFilterTiers.has(tier);
-        d3.select(this).property("checked", on).property("disabled", allOn);
-      });
-      d3.selectAll(".coord-tier-row").classed("is-disabled", allOn);
     }
 
     function coordClusterKeyForRow(d) {
@@ -9288,7 +9225,7 @@
         appendCoordSummaryField(
           dl,
           "Status",
-          `${state.coordSelectedProvince.province} is not in the current network filter. Include its priority class or choose All provinces to see links.`
+          `${state.coordSelectedProvince.province} is not in the current network filter. Adjust filters to see links.`
         );
         return;
       }
@@ -9521,11 +9458,7 @@
       const svg = d3.select("#coordinationNetwork");
       svg.selectAll("*").remove();
       if (!nodes.length) {
-        const msg = state.coordFilterAll
-          ? "No provinces match the current network filter."
-          : (state.coordFilterTiers && state.coordFilterTiers.size === 0
-            ? "Select at least one priority class below, or choose All provinces."
-            : "No provinces match the selected priority classes and filters.");
+        const msg = "No provinces match the current network filter.";
         svg.append("text")
           .attr("x", 500).attr("y", 340)
           .attr("text-anchor", "middle")
@@ -9739,12 +9672,6 @@
       if (state.step !== 6) return;
       updateCoordPlanningLensHelper();
       syncCoordFilterControlsUI();
-      const groupLabel = state.coordNodeGroup === "island"
-        ? "island group"
-        : (state.coordNodeGroup === "priority" ? "priority class" : "region");
-      d3.select("#coordinationLeftRail .coordination-left-sub").text(
-        `Clusters grouped by ${groupLabel}. Ranked by priority-province count and average priority score.`
-      );
       renderCoordinationClusterRank(classified);
       renderCoordinationSummary(classified);
       renderCoordinationNetwork(classified);
@@ -9777,28 +9704,8 @@
         renderAll(rows, tracks, provinces);
       }
 
-      d3.select("#coordFilterAll").on("change", function () {
-        state.coordFilterAll = this.checked;
-        if (state.coordFilterAll) {
-          state.coordFilterTiers = new Set();
-        }
-        onCoordFilterChanged();
-      });
-
       d3.select("#coordFilterTop20").on("change", function () {
         state.coordFilterTop20 = this.checked;
-        onCoordFilterChanged();
-      });
-
-      d3.selectAll(".coord-tier-check").on("change", function () {
-        if (!state.coordFilterTiers) state.coordFilterTiers = new Set();
-        if (this.checked) {
-          state.coordFilterAll = false;
-          state.coordFilterTiers.add(this.value);
-        } else {
-          state.coordFilterTiers.delete(this.value);
-          if (state.coordFilterTiers.size === 0) state.coordFilterAll = true;
-        }
         onCoordFilterChanged();
       });
       d3.select("#coordNetworkResetBtn").on("click", () => {
